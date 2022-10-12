@@ -17,6 +17,10 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^5.3.3",
-    "postcss": "^8.4.17"
+    "postcss": "^8.4.17",
+    "pug": "^3.0.2",
+    "pug-plain-loader": "^1.1.0",
+    "sass": "^1.55.0",
+    "sass-loader": "^10.3.1"
   }
 }
