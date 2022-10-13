@@ -1,16 +1,7 @@
 <template>
-  <div class="m-0 p-0 body">
+  <div class="m-0 p-0 body" :class="[theme? 'darkMode' : 'lightMode']">
     <!-- fixed Nav -->
-    <nav class="w-full nav-1 h-fit flex justify-between items-center px-5 py-6">
-      <div class="logo">
-        <div class="text-2xl sm:text-xl text-lg text-white">
-          <NuxtLink to="/">Movie-App</NuxtLink>
-        </div>
-      </div>
-      <div class="mode-toggle">
-        <input type="checkbox" />
-      </div>
-    </nav>
+  <Navbar/>
     <!-- Hero Section -->
     <div class="hero w-full relative flex flex-col">
       <div class="absolute-1 absolute top-0 left-0 w-full h-full">
@@ -77,19 +68,14 @@
             sm:w-96
             w-full
             text-sm text-gray-900
-            bg-gray-50
             rounded-lg
-            border border-gray-300
+             border-gray-300
             focus:border-0
-            dark:bg-gray-700
-            dark:border-gray-600
-            dark:placeholder-gray-400
-            dark:text-white
-            dark:focus:ring-blue-500
-            dark:focus:border-blue-500
+          active:border-yellow-500
             max-w-xs
           "
-          placeholder="Search user by name"
+          :class="[theme?'searchDark':'searchLight']"
+          placeholder="Search name and hit enter.."
           required
           v-model.lazy="searchInput"
           @keyup.enter="SearchMovies()"
@@ -161,76 +147,89 @@
 </template>
 
 <script>
+import Navbar from '../components/navbar.vue';
 export default {
-  name: "IndexPage",
-  data() {
-    return {
-      movies: [],
-      pageNum: 1,
-      searchInput: "",
-      err: "",
-      error: true,
-    };
-  },
-  async fetch() {
-    await this.getMovies();
-  },
-  methods: {
-    pushToNewRoute(id) {
-      this.$router.push({ name: "Detailid", params: { Detailid: id } });
+    name: "IndexPage",
+    data() {
+        return {
+            movies: [],
+            pageNum: 1,
+            searchInput: "",
+            err: "",
+            error: true,
+            theme: false
+        };
     },
-    async nextPage(){
-      this.pageNum++
-      await this.getMovies();
-
+    async fetch() {
+        await this.getMovies();
     },
-    async prevPage(){
-      this.pageNum--
-      await this.getMovies();
+    methods: {
+     
+        pushToNewRoute(id) {
+            this.$router.push({ name: "Detailid", params: { Detailid: id } });
+        },
+        async nextPage() {
+            this.pageNum++;
+            await this.getMovies();
+            window.scrollTo(0, 0);
+        },
+        async prevPage() {
+            this.pageNum--;
+            await this.getMovies();
+            window.scrollTo(0, 0);
+        },
+        async getMovies() {
+            let data = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=ebc21b23a1915d563377f4c0dfba0acb&language=en-US&page=${this.pageNum}`);
+            let res = await data.json();
+            this.movies = res.results;
+        },
+        async SearchMovies() {
+            if (this.searchInput != "") {
+                let data = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=ebc21b23a1915d563377f4c0dfba0acb&language=en-US&page=1&query=${this.searchInput}`);
+                let res = await data.json();
+                if (res.results.length > 0) {
+                    this.movies = res.results;
+                }
+                else {
+                    this.err = "no movie found with this name";
+                    this.error = true;
+                    setTimeout(() => {
+                        this.err = "";
+                        this.error = false;
+                    }, 5000);
+                }
+            }
+        },
     },
-    async getMovies() {
-      let data = await fetch(
-        `https://api.themoviedb.org/3/movie/now_playing?api_key=ebc21b23a1915d563377f4c0dfba0acb&language=en-US&page=${this.pageNum}`
-      );
-      let res = await data.json();
-      this.movies = res.results;
-    },
-    async SearchMovies() {
-      let data = await fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=ebc21b23a1915d563377f4c0dfba0acb&language=en-US&page=1&query=${this.searchInput}`
-      );
-      let res = await data.json();
-      if (res.results.length > 0) {
-        this.movies = res.results;
-      } else {
-        this.err = "no movie found with this name";
-        this.error = true;
-        setTimeout(() => {
-          this.err = "";
-          this.error = false;
-        }, 5000);
-      }
-    },
-  },
+    components: { Navbar }
 };
 </script>
 <style scoped lang="scss">
 .body {
-  scroll-behavior: smooth;
   max-width: 100vw;
   width: 100%;
   overflow: hidden;
 }
+.body.darkMode{
+  background: #1C1C1E;
+}
+.body.lightMode{
+  background: #E7EFF5;
+}
+.searchDark{
+  background: #E7EFF5;
+  color: #1C1C1E;
+
+}
+.searchLight{
+  background: #1C1C1E;
+  color: #E7EFF5;
+
+}
 * {
   box-sizing: border-box;
 }
-.nav-1 {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 8888;
-  background: rgba(0, 0, 0, 0.4);
-}
+
 .hero {
   background: url(../assets/hero.jpg) no-repeat center center;
   max-height: fit-content;
@@ -240,38 +239,8 @@ export default {
 .absolute-1 {
   background: rgba(0, 0, 0, 0.4);
 }
-input[type="checkbox"] {
-  position: relative;
-  border: none;
-  -webkit-appearance: none;
-  background: white;
-  outline: none;
-  height: 25px;
-  width: 82px;
-  border-radius: 15px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-input[type="checkbox"]::before {
-  content: "";
-  position: absolute;
-  width: 25px;
-  height: 20px;
-  border-radius: 15px;
-  transition: 0.75s ease all;
-  top: 2.5px;
-  left: 5px;
-  background: #363030;
-  transform: scale(1.1);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
 
-input:checked[type="checkbox"]:before {
-  background: #ccc;
-  left: 52px;
-}
-button {
+button, .nuxt-button {
   border: none;
   padding: 8px 40px 8px 40px;
   border-radius: 5px;
@@ -284,24 +253,13 @@ button {
   position: relative;
   top: 0;
 }
-.nuxt-button {
-  border: none;
-  padding: 8px 40px 8px 40px;
-  border-radius: 5px;
-  color: #fff;
-  margin-top: 2rem;
-  box-shadow: 0px 10px 0px 0px rgba(0, 0, 0, 0.4),
-    0px 0px 10px 0px rgba(120, 120, 120, 0.4);
-  background: rgba(0, 0, 0, 0.8);
-  cursor: pointer;
-  transition: all 0.16s;
-  position: relative;
-  top: 0;
-}
-button:focus {
+
+button:focus, .nuxt-button:focus {
   outline: none;
 }
 button:active,
+.nuxt-button:active,
+.nuxt-button:hover,
 button:hover {
   box-shadow: 0px 5px 0px 0px rgba(0, 0, 0, 0.4);
   top: 5px;
@@ -315,11 +273,11 @@ i.fa-search {
   transform: rotate(360deg);
 }
 .grid {
-  width: 90vw;
+  width: 95vw;
   margin: 0 auto;
   max-width: 1170px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-column-gap: 1.5rem;
   grid-row-gap: 2rem;
 }
