@@ -76,12 +76,14 @@
           </div>
           <div class="bordered">
             <p class="font-bold">Genres:</p>
+            <div class="grid">
             <div class="bod" v-for="(item, ind) in movie.genres" :key="ind">
               <p class="back" v-if="ind < movie.genres.length - 1">
                 {{ item.name +','}}
               </p>
               <p class="back"  v-else>{{item.name + '.'}}</p>
             </div>
+        </div>
           </div>
         </div>
       </div>
@@ -187,9 +189,7 @@ img {
 }
 
 .bordered .bod {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
+ 
 }
 .bordered .bod p.back {
   width: fit-content;
@@ -198,10 +198,12 @@ img {
 
   transition: ease 0.3s;
 }
-.bordered .bod p.bg {
-  width: fit-content;
-  margin: 0 10px 10px 10px;
+.grid {
+    display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
 }
+
 @media (max-width: 700px) {
   .rowe2 {
     flex-direction: column;
