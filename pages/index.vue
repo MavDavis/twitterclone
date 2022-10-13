@@ -1,5 +1,5 @@
 <template>
-  <div class="m-0 p-0 body" :class="[theme? 'darkMode' : 'lightMode']">
+  <div class="m-0 p-0 body" :class="[$store.state.theme? 'darkMode' : 'lightMode']">
     <!-- fixed Nav -->
   <Navbar/>
     <!-- Hero Section -->
@@ -34,8 +34,8 @@
               Take some time off work. Have fun!!
             </h1>
           </div>
-          <button>
-            <a href="#movie-grid" class="learn-more">See All Movies</a>
+          <button class="text-xl sm:text-2xl">
+            <a href="#movie-grid" class="learn-more">See Movies</a>
           </button>
         </div>
       </div>
@@ -74,7 +74,7 @@
           active:border-yellow-500
             max-w-xs
           "
-          :class="[theme?'searchDark':'searchLight']"
+          :class="[$store.state.theme?'searchDark':'searchLight']"
           placeholder="Search name and hit enter.."
           required
           v-model.lazy="searchInput"
@@ -87,7 +87,7 @@
       <p v-if="error" class="text-red-400 text-xl text-center">{{ err }}</p>
     </div>
     <!-- Movie Grid -->
-    <div id="movie-grid" class="min-h-screen grid mb-5">
+    <div v-if="!$fetch.pending" id="movie-grid" class="min-h-screen grid mb-5">
       <div
         class="card"
         v-for="item in movies"
@@ -132,6 +132,7 @@
         </div>
       </div>
     </div>
+    <div v-else><Loading/></div>
     <!-- next button -->
     <div class="flex w-full relative justify-between items-center my-5">
       <div v-if="pageNum > 1" @click="prevPage()" class="w-1/4 cursor-pointer hover:tracking-wider flex justify-center items-center">
@@ -148,6 +149,7 @@
 
 <script>
 import Navbar from '../components/navbar.vue';
+import Loading from '../components/Loading.vue';
 export default {
     name: "IndexPage",
     data() {
@@ -158,6 +160,12 @@ export default {
             err: "",
             error: true,
             theme: false
+        };
+    },
+    
+    head() {
+        return {
+            title:' Mavs Movies',
         };
     },
     async fetch() {
@@ -201,7 +209,7 @@ export default {
             }
         },
     },
-    components: { Navbar }
+    components: { Navbar, Loading }
 };
 </script>
 <style scoped lang="scss">

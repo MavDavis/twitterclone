@@ -8,6 +8,7 @@
       <div class="mode-toggle">
         <input type="checkbox" 
       @click="toggleTheme()"
+      v-model="$store.state.theme"
         />
       </div>
     </nav>
@@ -22,8 +23,9 @@ return{
     },
 methods:{
     toggleTheme() {
-            this.theme = !this.theme;
-        },
+        this.theme = !this.theme
+        this.$store.commit("toggleTheme", this.theme)  
+          },
 }
 }
 </script>

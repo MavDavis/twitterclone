@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div v-if="!$fetch.pending" :class="[$store.state.theme? 'darkMode' : 'lightMode']">
     <Navbar/>
     <NuxtLink
       to="/"
       class="
-      mt-16
+      pt-20
         p-5
         w-full
         cursor-pointer
@@ -87,18 +87,21 @@
       </div>
     </div>
   </div>
+  <div v-else>
+<Loading/>
+  </div>
 </template>
 
 
 <script >
 import Navbar from '../components/navbar.vue';
+import Loading from '../components/Loading.vue';
 export default {
     name: "singleMovie",
     async fetch() {
         await this.getSingleMovie();
     },
     // delay for fetching
-    fetchDelay: 1000,
     head() {
         return {
             title: this.movie.title,
@@ -117,11 +120,22 @@ export default {
             console.log(this.movie);
         },
     },
-    components: { Navbar }
+    components: { Navbar, Loading }
 };
 </script>
 
 <style scoped lang="scss">
+
+.lightMode{
+  background: #E7EFF5;
+  color: #1C1C1E;
+
+}
+.darkMode{
+  background: #1C1C1E;
+  color: #E7EFF5;
+
+}
 .rowe,
 .rowe2 {
   display: flex;
