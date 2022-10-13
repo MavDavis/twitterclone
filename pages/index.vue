@@ -20,7 +20,7 @@
         >
           <h1
             class="
-              text-3xl
+              text-2xl
               sm:text-4xl
               md:text-6xl
               tracking-wide
@@ -30,11 +30,13 @@
             Fun Place..
           </h1>
           <div class="typewriter">
-            <h1 class="font-bold text-lg sm:text-xl md:text-2xl px-5">
+            <h1 
+            
+            class="font-bold text-lg sm:text-xl md:text-2xl px-5">
               Take some time off work. Have fun!!
             </h1>
           </div>
-          <button class="text-xl sm:text-2xl">
+          <button class="text-lg sm:text-2xl">
             <a href="#movie-grid" class="learn-more">See Movies</a>
           </button>
         </div>
@@ -316,6 +318,18 @@ i.fa-search {
   white-space: nowrap;
   letter-spacing: 0.15em;
   animation: typing 4.5s steps(30, end), blink-caret 0.6s step-end infinite;
+
+  @media(max-width:400px){
+    font-size: 1rem;
+  }
+  
+  @media(max-width:350px){
+    font-size: .81rem;
+  }
+  
+  @media(max-width:300px){
+    font-size: .7rem;
+  }
 }
 
 /* The typing effect */
