@@ -1,138 +1,375 @@
 <template>
-<div class="m-0 p-0">
-  <!-- Hero Section -->
-<div class="hero w-full  relative flex flex-col">
-<div class="absolute-1 absolute top-0 left-0 w-full h-full">
-<nav class="w-full h-fit flex justify-between items-center px-5 py-6">
-  <div class="logo"><div class="text-2xl sm:text-xl text-lg text-white">Movie-App</div></div>
-<div class="mode-toggle"> 
-  <input type="checkbox">
-</div>
-</nav>
-
-<div class="details px-5 py-6 text-white relative flex flex-col justify-center items-center h-3/4">
-  <h1 class="text-3xl sm:text-4xl md:text-6xl tracking-wide font-semibold mb-8 font-mono">Fun Place..</h1>
- <button> <a href="#movie-grid" class="learn-more">See All Movies</a>
- </button>
-
-</div></div>
-</div>
-
-<!-- Search Bar -->
-<div class="search-bar">
-  <form class="col-span-12 md:col-span-6">
-      <div class="relative ">
+  <div class="m-0 p-0 body">
+    <!-- fixed Nav -->
+    <nav class="w-full nav-1 h-fit flex justify-between items-center px-5 py-6">
+      <div class="logo">
+        <div class="text-2xl sm:text-xl text-lg text-white">
+          <NuxtLink to="/">Movie-App</NuxtLink>
+        </div>
+      </div>
+      <div class="mode-toggle">
+        <input type="checkbox" />
+      </div>
+    </nav>
+    <!-- Hero Section -->
+    <div class="hero w-full relative flex flex-col">
+      <div class="absolute-1 absolute top-0 left-0 w-full h-full">
         <div
-          class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none form-pp"
+          class="
+            details
+            px-5
+            py-6
+            text-white
+            relative
+            flex flex-col
+            justify-center
+            items-center
+            h-3/4
+          "
         >
-         <i class="fas fa-search text-gray-700"></i>
+          <h1
+            class="
+              text-3xl
+              sm:text-4xl
+              md:text-6xl
+              tracking-wide
+              font-semibold font-mono
+            "
+          >
+            Fun Place..
+          </h1>
+          <div class="typewriter">
+            <h1 class="font-bold text-lg sm:text-xl md:text-2xl">
+              Take some time off work. Have fun!!
+            </h1>
+          </div>
+          <button>
+            <a href="#movie-grid" class="learn-more">See All Movies</a>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar my-8 flex justify-center items-center w-full">
+      <div class="relative">
+        <div
+          class="
+            flex
+            absolute
+            inset-y-0
+            left-0
+            items-center
+            pl-3
+            pointer-events-none
+            form-pp
+          "
+        >
+          <i class="fas fa-search text-gray-700"></i>
         </div>
         <input
           type="search"
           id="default-search"
-          class="block p-4 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300  focus:border-0 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 max-w-xs"
+          class="
+            block
+            p-4
+            pl-10
+            sm:w-96
+            w-full
+            text-sm text-gray-900
+            bg-gray-50
+            rounded-lg
+            border border-gray-300
+            focus:border-0
+            dark:bg-gray-700
+            dark:border-gray-600
+            dark:placeholder-gray-400
+            dark:text-white
+            dark:focus:ring-blue-500
+            dark:focus:border-blue-500
+            max-w-xs
+          "
           placeholder="Search user by name"
           required
+          v-model.lazy="searchInput"
+          @keyup.enter="SearchMovies()"
         />
       </div>
-    </form>
+    </div>
+    <!-- errorDiv -->
+    <div class="error">
+      <p v-if="error" class="text-red-400 text-xl text-center">{{ err }}</p>
+    </div>
+    <!-- Movie Grid -->
+    <div id="movie-grid" class="min-h-screen grid mb-5">
+      <div
+        class="card"
+        v-for="item in movies"
+        :key="item.id"
+        @click="pushToNewRoute(item.id)"
+      >
+        <img
+          :src="`https://image.tmdb.org/t/p/w500/${item.poster_path}`"
+          alt=""
+          class="relative w-full h-full"
+        />
+        <div
+          class="card-absolute flex flex-col justify-center items-center px-5"
+        >
+          <div
+            class="
+              absolute
+              top-0
+              left-0
+              bg-yellow-500
+              text-white
+              px-5
+              py-4
+              rounded-br-lg
+            "
+          >
+            {{ item.vote_average }}
+          </div>
+          <h3 class="font-bold text-center text-white text-xl mb-4">
+            {{ item.title.slice(0, 25)
+            }}<span v-if="item.title.length > 25">...</span>
+          </h3>
+          <p class="text-yellow-500 text-lg text-center">
+            {{ item.overview.slice(0, 90)
+            }}<span v-if="item.overview.length > 90">...</span>
+          </p>
+          <NuxtLink
+            :to="{ name: 'Detailid', params: { Detailid: item.id } }"
+            class="nuxt-button"
+            >More Details</NuxtLink
+          >
+        </div>
+      </div>
+    </div>
+    <!-- next button -->
+    <div class="flex w-full relative justify-between items-center my-5">
+      <div v-if="pageNum > 1" @click="prevPage()" class="w-1/4 cursor-pointer hover:tracking-wider flex justify-center items-center">
+        <i class="fas fa-arrow-left"></i>
+        <p class="text-lg">Prev</p>
+      </div>
+      <div @click="nextPage()" class="w-1/4 cursor-pointer hover:tracking-wider flex justify-center items-center">
+        <i class="fas fa-arrow-right"></i>
+        <p class="text-lg">Next</p>
+      </div>
+    </div>
   </div>
-<!-- Movie Grid -->
-<div id="movie-grid" class="h-screen"></div>
-</div>
 </template>
 
 <script>
 export default {
-  name: 'IndexPage',
-  data(){
-    return{
-      movies:[]
-    }
+  name: "IndexPage",
+  data() {
+    return {
+      movies: [],
+      pageNum: 1,
+      searchInput: "",
+      err: "",
+      error: true,
+    };
   },
-  async fetch(){
-await this.getMovies()
+  async fetch() {
+    await this.getMovies();
   },
-  methods:{
-    async getMovies(){
-    let data = await  fetch('https://api.themoviedb.org/3/movie/550?api_key=ebc21b23a1915d563377f4c0dfba0acb&page=1')
-    let res = await data.json();
-    console.log(res.result);
-    }
-  }
-}
+  methods: {
+    pushToNewRoute(id) {
+      this.$router.push({ name: "Detailid", params: { Detailid: id } });
+    },
+    async nextPage(){
+      this.pageNum++
+      await this.getMovies();
+
+    },
+    async prevPage(){
+      this.pageNum--
+      await this.getMovies();
+    },
+    async getMovies() {
+      let data = await fetch(
+        `https://api.themoviedb.org/3/movie/now_playing?api_key=ebc21b23a1915d563377f4c0dfba0acb&language=en-US&page=${this.pageNum}`
+      );
+      let res = await data.json();
+      this.movies = res.results;
+    },
+    async SearchMovies() {
+      let data = await fetch(
+        `https://api.themoviedb.org/3/search/movie?api_key=ebc21b23a1915d563377f4c0dfba0acb&language=en-US&page=1&query=${this.searchInput}`
+      );
+      let res = await data.json();
+      if (res.results.length > 0) {
+        this.movies = res.results;
+      } else {
+        this.err = "no movie found with this name";
+        this.error = true;
+        setTimeout(() => {
+          this.err = "";
+          this.error = false;
+        }, 5000);
+      }
+    },
+  },
+};
 </script>
 <style scoped lang="scss">
-body{
+.body {
   scroll-behavior: smooth;
+  max-width: 100vw;
+  width: 100%;
+  overflow: hidden;
 }
-*{
+* {
   box-sizing: border-box;
-
 }
-.hero{
-  background: url(../assets/hero.jpg) no-repeat center center;
-  height: 400px;
-  max-height: fit-content;
-  perspective: 1000px;
-}
-.absolute-1{
+.nav-1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 8888;
   background: rgba(0, 0, 0, 0.4);
 }
-input[type='checkbox']{
-    position: relative;
-    border:none;
-    -webkit-appearance: none;
-    background: white;
-    outline:none;
-    height:25px;
-    width: 82px;
-    border-radius: 15px;
-box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+.hero {
+  background: url(../assets/hero.jpg) no-repeat center center;
+  max-height: fit-content;
+  perspective: 1000px;
+  height: 100vh;
 }
-input[type='checkbox']::before{
-    content:'';
-    position:absolute;
-    width: 25px;
-    height:20px;
-    border-radius: 15px;
-    transition: .75s ease all;
-    top: 2.5px;
-    left:5px;
-    background:#363030;
-    transform:scale(1.1);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+.absolute-1 {
+  background: rgba(0, 0, 0, 0.4);
+}
+input[type="checkbox"] {
+  position: relative;
+  border: none;
+  -webkit-appearance: none;
+  background: white;
+  outline: none;
+  height: 25px;
+  width: 82px;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  width: 25px;
+  height: 20px;
+  border-radius: 15px;
+  transition: 0.75s ease all;
+  top: 2.5px;
+  left: 5px;
+  background: #363030;
+  transform: scale(1.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-input:checked[type='checkbox']:before{
-    background: #ccc;
-    left:52px;
+input:checked[type="checkbox"]:before {
+  background: #ccc;
+  left: 52px;
 }
-button{
-  border:none;
-  padding:8px 40px 8px 40px;
-  border-radius:5px;
-    box-shadow:0px 10px 0px 0px rgba(0, 0, 0, 0.4), 
-      0px 0px 10px 0px rgba(120, 120, 120, 0.4);
-  color:white;
-  background:rgba(0, 0, 0, 0.8);
-  cursor:pointer;
-  transition:all 0.16s;
-  position:relative;
-  top:0;
+button {
+  border: none;
+  padding: 8px 40px 8px 40px;
+  border-radius: 5px;
+  box-shadow: 0px 10px 0px 0px rgba(0, 0, 0, 0.4),
+    0px 0px 10px 0px rgba(120, 120, 120, 0.4);
+  color: white;
+  background: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  transition: all 0.16s;
+  position: relative;
+  top: 0;
 }
-button:focus{
-  outline:none;
+.nuxt-button {
+  border: none;
+  padding: 8px 40px 8px 40px;
+  border-radius: 5px;
+  color: #fff;
+  margin-top: 2rem;
+  box-shadow: 0px 10px 0px 0px rgba(0, 0, 0, 0.4),
+    0px 0px 10px 0px rgba(120, 120, 120, 0.4);
+  background: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  transition: all 0.16s;
+  position: relative;
+  top: 0;
 }
-button:active, button:hover{
+button:focus {
+  outline: none;
+}
+button:active,
+button:hover {
   box-shadow: 0px 5px 0px 0px rgba(0, 0, 0, 0.4);
-  top:5px;
+  top: 5px;
 }
-#default-search, i.fa-search{
-  transition: all ease .4s;
+#default-search,
+i.fa-search {
+  transition: all ease 0.4s;
   cursor: pointer;
 }
-#default-search:focus i.fa-search{
+#default-search:focus i.fa-search {
   transform: rotate(360deg);
+}
+.grid {
+  width: 90vw;
+  margin: 0 auto;
+  max-width: 1170px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-column-gap: 1.5rem;
+  grid-row-gap: 2rem;
+}
+.card {
+  position: relative;
+  .card-absolute {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: ease-in-out 0.4s;
+  }
+  &:hover .card-absolute {
+    cursor: pointer;
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+}
+.typewriter h1 {
+  color: rgb(234 179 8);
+  margin: 2rem auto;
+  overflow: hidden;
+  border-right: 0.15em solid #fff;
+  white-space: nowrap;
+  letter-spacing: 0.15em;
+  animation: typing 4.5s steps(30, end), blink-caret 0.6s step-end infinite;
+}
+
+/* The typing effect */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #fff;
+  }
 }
 </style>
