@@ -30,7 +30,7 @@
             Fun Place..
           </h1>
           <div class="typewriter">
-            <h1 class="font-bold text-lg sm:text-xl md:text-2xl">
+            <h1 class="font-bold text-lg sm:text-xl md:text-2xl px-5">
               Take some time off work. Have fun!!
             </h1>
           </div>
