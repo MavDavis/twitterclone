@@ -10,25 +10,31 @@
   }
   </script>
   
-  <style lang="scss" scoped>
+  <style scoped>
   .loading{
       z-index: 200;
-      background: rgba(0,0,0,0.6);
-      @keyframes spin{
-          to{
-              transform: rotateZ(360deg);
-          }
-      }
-      span{
-          display: block;
-          width: 60px;
-          height:60px;
-  margin: 0 auto;
-  border:3px solid transparent;
-  border-top-color: #fff;
-  border-bottom-color: #fff;
-  border-radius: 50%;
-  animation: spin ease 1s infinite;
-  }
-  }
+      display: flex;
+      width:100%;
+      min-height:100vh;
+      height:100%;
+      position:relative;
+      justify-content: center;
+      align-items: center;
+}
+@keyframes spin{
+    to{
+        transform: rotateZ(360deg);
+    }
+}
+span{
+    display: block;
+    width: 60px;
+    height:60px;
+margin: 0 auto;
+border:3px solid transparent;
+border-top-color: #1D9BF0;
+border-bottom-color: #1D9BF0;
+border-radius: 50%;
+animation: spin ease 1s infinite;
+}
   </style>
