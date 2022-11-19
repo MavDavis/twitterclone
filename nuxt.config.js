@@ -1,9 +1,11 @@
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
+
   head: {
-    title: 'movie-app',
+    title: 'twitter',
     script:[
-      {src:"https://kit.fontawesome.com/43dcc20e7a.js",
+      {src:"https://kit.fontawesome.com/87e2f7b4fa.js",
     crossorigin:"anonymous"
     },
     ],
@@ -36,14 +38,18 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/tailwindcss
-    '@nuxtjs/tailwindcss',
+    '@nuxtjs/tailwindcss', 
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
-  ],
+  modules: ['nuxt-icon',   '@nuxtjs/composition-api/module'],
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   },
   target: 'static'
 }
+// import { defineNuxtConfig } from 'nuxt'
+
+// export default defineNuxtConfig({
+// })

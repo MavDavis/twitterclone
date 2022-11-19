@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full relative">
-    <div class="flex w-full" v-if="loggedIn">
+    <div class="flex w-full" v-if="$store.state.loggedIn">
       <div class="xs:w-5/6 w-full sm:w-3/5 border-x min-h-screen h-full">
         <home-main />
       </div>
@@ -18,11 +18,10 @@
 export default{
   data(){
     return{
-      loggedIn:true,
     }
   },
     mounted(){
-      if (this.loggedIn == false) {
+      if (this.$store.state.loggedIn == false) {
 this.$router.push("/Explore");
     }
   

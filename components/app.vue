@@ -25,7 +25,7 @@
     </ul>
   </nav>
       </div>
-      <div class="w-full fixed bottom-0 left-0 h-fit py-2 xs:bg-dim-500 bg-white flex  sm:pl-40 xs:pl-10 pl-4 justify-between" v-if="!loggedIn">
+      <div class="w-full fixed bottom-0 left-0 h-fit py-2 xs:bg-dim-500 bg-white flex  sm:pl-40 xs:pl-10 pl-4 justify-between" v-if="!$store.state.loggedIn">
      <div class=" flex-col items-center xs:flex hidden">
       <h1 class="text-white text-sm xs:text-lg font-bold">
   Don’t miss what’s happening</h1>

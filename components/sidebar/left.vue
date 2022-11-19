@@ -13,17 +13,16 @@
   </NuxtLink>
     </li>
      <li class="cursor-pointer flex items-center text-sm px-5 py-1  rounded-full my-1 hover:bg-slate-200" >
-      <Icon name="iconoir:more-horiz-circled-outline" />
       
     <div>
       <span class="ml-3 lg:block hidden">More</span>
     </div>
     </li>
-    <button v-if="loggedIn" class="lg:flex hidden  items-center justify-center w-40 relative py-2 text-sm rounded-full my-1 hover:bg-dim-600 bg-dim-500 text-white ">Tweet</button>
+    <button v-if="$store.state.loggedIn" class="lg:flex hidden  items-center justify-center w-40 relative py-2 text-sm rounded-full my-1 hover:bg-dim-600 bg-dim-500 text-white ">Tweet</button>
   </ul>
 </nav>
     </div>
-    <div v-if="loggedIn" class="absolute bottom-0 mb-5 hover:bg-slate-300 rounded-full p-2 xs:pr-5 justify-start  items-center flex w-fit">
+    <div v-if="$store.state.loggedIn" class="absolute bottom-0 mb-5 hover:bg-slate-300 rounded-full p-2 xs:pr-5 justify-start  items-center flex w-fit">
   <div class="justify-center  items-center flex img w-12 h-12 rounded-full bg-dim-500 xs:mr-2">
     <img class=" relative" src="" alt="">
   </div>
@@ -38,10 +37,12 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
 
-const links = ref([
+<script>
+export default {
+ data(){
+  return{
+    links: ([
 {icon:"fas  fa-house", name:'Home',params:'index'},
 {icon:'fa-regular fa-hashtag', name:'Explore',loggedIn:true},
 {icon:'fa-regular fa-bell', name:'Notification'},
@@ -52,9 +53,18 @@ const links = ref([
 // {icon:'', name:'More'},
 
 ])
-const loggedIn = ref(false)
+  }
+ },
+ mounted(){
+  if(this.$store.state.loggedIn === true){
+    this.links = this.links.map(item => item.loggedIn ? item.loggedIn == true : 
+    { ...item, loggedIn: true }
+          
+    )
+  }
+ }
+}
 </script>
-
 <style scoped>
 /* @media(max-width:980px){
   .name

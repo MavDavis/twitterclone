@@ -21,19 +21,20 @@
   </div>
 </template>
 
-<script setup>
- const props = defineProps(['logo'])
- const emit = defineEmits(['closeModal'])
-const router = useRouter();
-    const closeModal = () => {
-      if(props.logo){
-        emit('closeModal')
+<script>
+export default {
+  props:['logo'],
+  methods:{
+    closeModal(){
+      if(this.logo){
+        this.$emit('closeModal')
     }else{
-      router.push("/Explore");
+      this.$router.push("/Explore");
     }
     }
+  }
+}
 </script>
-
 <style scoped>
 .bg {
   background: rgba(0, 0, 0, 0.5);
