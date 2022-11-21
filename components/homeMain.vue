@@ -14,17 +14,17 @@
         </div>
         <div class="flex px-4 w-full justify-between items-center">
           <div class="w-full ml-12 py-2 flex justify-start items-center">
- 
+<!--  
             <Icon name="arcticons:gallery" class="cursor-pointer text-3xl text-dim-600 p-1 rounded-full hover:bg-dim-100"/>
             <Icon name="heroicons:gif" class="cursor-pointer text-3xl text-dim-600 p-1 rounded-full hover:bg-dim-100"/>
-            <Icon name="ph:list-dashes-bold" class="cursor-pointer text-3xl text-dim-600 p-1 rounded-full hover:bg-dim-100"/>
+            <Icon name="ph:list-dashes-bold" class="cursor-pointer text-3xl text-dim-600 p-1 rounded-full hover:bg-dim-100"/>-->
            
             <i
               class="fa-regular fa-calendar cursor-pointer text-dim-500 p-1 rounded-full hover:bg-dim-100 mx-1"
             ></i>
-            <Icon name="ph:smiley" class="cursor-pointer text-3xl text-dim-600 p-1 rounded-full hover:bg-dim-100"/>
+            <!-- <Icon name="ph:smiley" class="cursor-pointer text-3xl text-dim-600 p-1 rounded-full hover:bg-dim-100"/>
           
-            <Icon name="cil:location-pin" class="cursor-pointer text-3xl text-dim-600 p-1 rounded-full hover:bg-dim-100"/>
+            <Icon name="cil:location-pin" class="cursor-pointer text-3xl text-dim-600 p-1 rounded-full hover:bg-dim-100"/>  -->
 
           
           </div>

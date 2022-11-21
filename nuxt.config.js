@@ -49,7 +49,3 @@ export default {
   },
   target: 'static'
 }
-// import { defineNuxtConfig } from 'nuxt'
-
-// export default defineNuxtConfig({
-// })

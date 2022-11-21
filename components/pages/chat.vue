@@ -105,7 +105,8 @@
 <script setup>
 import { ref } from "vue";
 
-const chat = ref([
+const chat = ref(
+  [
   {
     name: "Jeyi",
     nickname: "Jeyvers",
