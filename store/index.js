@@ -1,11 +1,22 @@
+import { createStore } from 'vuex'
+import { firebaseAuth } from "../firebase/index";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { db } from "../firebase";
+import { signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { collection, getDoc, getDocs , doc, query, orderBy, deleteDoc, where , onSnapshot} from "firebase/firestore"; 
+import { getFirestore,  setDoc } from "firebase/firestore";
 export const state = () => ({
 theme:true,
 loggedIn: false,
 userProfile:{
   name:'',
   age:'',
+  email:'dave@test.com',
+  password:'123456789',
   followers:'',
   following:'',
+  id:null,
   chats: [
     {
       name: "Jeyi",
@@ -48,13 +59,46 @@ userProfile:{
 about:'',
 link:'',
 tweets:'',
+
 likedTweets:''
 },
-tweets:[]
+tweets:[],
+loading:false,
+error:false,
+errMssg:'',
   })
 
   export const mutations = {
     toggleTheme(state,payload) {
       state.theme = payload
-    }
+    },
+    login(state, payload){
+      state.loggedIn = true
+      if (state.userProfile.email === "" || state.userProfile.password === "") {
+        return;
+      } else {
+        state.loading = true;
+
+        signInWithEmailAndPassword(
+          firebaseAuth,
+          state.userProfile.email,
+          state.userProfile.password
+        )
+          .then((userCredential) => {
+            state.userProfile.id = userCredential.user.uid
+            localStorage.setItem("userid", userCredential.user.uid);
+            state.loading = false;
+            localStorage.setItem("Is-logged", false);
+            this.app.router.push('/')       
+              }).catch((error) => {
+           state.loading = false;
+            state.error = true;
+            state.errMssg = error.message
+            setTimeout(() => {
+              state.error = false;
+              state.errMssg = "";
+            }, 20000);
+          });
+      }
+     }
   }
