@@ -28,7 +28,8 @@
     <div class="w-full px-4">
 <h4 class="font-semibold text-xl">Date of birth</h4>  
     <p class="text-sm w-3/4">This will not be shown publicly. Confirm your own age, even if this account is for a business, a pet, or something else.</p>
-    </div>
+  <select/>  
+  </div>
   </register>
 </div>
 </template>
