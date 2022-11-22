@@ -34,7 +34,7 @@
 <script setup>
 import { ref } from "vue";
 
-const signUpClicked = ref(false)
+const signUpClicked = ref(true)
 const signUpClickOn = ()=>{
   signUpClicked.value = true
 }

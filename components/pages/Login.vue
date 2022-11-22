@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <register>
-      <div v-if="!nextClicked" class="w-full">
+      <div v-if="!nextClicked" class="w-full ">
         <div class="flex justify-center">
           <div class="w-fit"><page-header name="Sign into twitter" /></div>
         </div>
@@ -48,7 +48,7 @@
       </div>
       <div
         v-else
-        class="w-full mx-auto flex flex-col items-center h-full relative"
+        class="w-full mx-auto flex flex-col items-center h-full relative px-8"
       >
         <p
           v-if="$store.state.error"
@@ -65,16 +65,20 @@
           placeholder="Email or Username"
           disabled
           class="block p-4 xs:w-3/4 w-full bg-slate-100 text-sm text-slate-400 border border-slate-300 rounded-lg focus:outline-none active:outline-none active:border-dim-500 focus:ring-1 focus:ring-dim-500 mb-5"
-        /><input
+        />
+        <div class="w-full flex item-center justify-center relative">
+          <input type="checkbox" @click="togglePassword()" class="absolute top-1/3 right-14 xs:right-28 z-50">
+          <input
           :type="type"
           v-model="$store.state.userProfile.password"
           placeholder="Password"
-          class="block p-4 xs:w-3/4 w-full text-sm text-gray-900 border border-slate-200 rounded-lg focus:outline-none active:outline-none active:border-dim-500 focus:ring-1 focus:ring-dim-500"
+          class="block p-4 xs:w-3/4 w-full text-sm text-gray-900 border border-slate-200 rounded-lg focus:outline-none active:outline-none relative active:border-dim-500 focus:ring-1 focus:ring-dim-500"
         />
+        </div>
 
         <NuxtLink
           to="/forgotPassword"
-          class="w-full flex justify-start pl-20 text-dim-500 cursor-pointer"
+          class="w-full flex justify-start mt-4 xs:pl-20 text-dim-500 cursor-pointer"
           >forgot password?</NuxtLink
         >
         <div class="mt-auto w-full relative flex flex-col items-center">
@@ -118,6 +122,13 @@ export default {
         this.nextClicked = true;
       }
     },
+    togglePassword(){
+      if(this.type == 'password'){
+        this.type = 'text'
+      }else{
+        this.type = 'password'
+      }
+    }
   },
 };
 </script>

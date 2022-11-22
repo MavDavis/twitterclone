@@ -1,7 +1,7 @@
 <template>
   <div>
     <select :class="width"
-    class="">
+    class="border">
         <option :value="name"></option>
     </select>
   </div>
@@ -12,11 +12,12 @@
 export default {
 props:['name', 'width'],
 mounted(){
+    console.log('hy');
     let date = []
     for(let i = 0; i < 31; i++){
         date.push(i)
+        console.log(date, 5)
     }
-    console.log(date)
 }
 }
 </script>
