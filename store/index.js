@@ -12,9 +12,13 @@ loggedIn: false,
 userProfile:{
   name:'',
   age:'',
+  mob:'',
+  dob:'',
+  yob:'',
   email:'dave@test.com',
   password:'123456789',
   followers:'',
+  
   following:'',
   id:null,
   chats: [
@@ -55,6 +59,7 @@ userProfile:{
       img: "",
     },
   ],
+
   profileImage:'',
 about:'',
 link:'',
@@ -62,6 +67,7 @@ tweets:'',
 
 likedTweets:''
 },
+addedDetails:false,
 tweets:[],
 loading:false,
 error:false,
