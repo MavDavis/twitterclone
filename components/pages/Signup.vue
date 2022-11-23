@@ -1,6 +1,7 @@
 <template>
   <div class="w-full">
     <register>
+
     <div class="flex justify-center ">
       <div class="w-fit"><page-header name="Join twitter" /></div>
     </div>
@@ -34,7 +35,7 @@
 <script setup>
 import { ref } from "vue";
 
-const signUpClicked = ref(true)
+const signUpClicked = ref(false)
 const signUpClickOn = ()=>{
   signUpClicked.value = true
 }

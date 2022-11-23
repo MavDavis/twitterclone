@@ -2,6 +2,8 @@
   <div class="w-full">
     <register>
       <div v-if="!nextClicked" class="w-full ">
+        <p class="text-lg flex justify-center px-4 text-red-300" v-if="error">{{errorMsg}}</p>
+
         <div class="flex justify-center">
           <div class="w-fit"><page-header name="Sign into twitter" /></div>
         </div>
@@ -104,7 +106,9 @@
           </p>
         </div>
       </div>
+      
     </register>
+    <div  v-if="$store.state.loading"><Loading/></div>
   </div>
 </template>
 
@@ -114,12 +118,26 @@ export default {
     return {
       type: "password",
       nextClicked: false,
+      error:false,
+      errorMsg:''
     };
   },
   methods: {
     nextclick() {
       if (this.$store.state.userProfile.email != "") {
+        var regex = /[^\s@]+@[^\s@]+\.[^\s@]+/;
+    if (regex.test(this.$store.state.userProfile.email )) {
         this.nextClicked = true;
+        console.log(-5);
+      } else {
+        this.error = true
+        this.errorMsg = 'Enter a valid email'
+        console.log(5);
+        setTimeout(() => {
+              this.error = false;
+              this.errorMssg = "";
+            }, 20000);
+      }
       }
     },
     togglePassword(){
