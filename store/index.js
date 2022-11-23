@@ -8,6 +8,8 @@ import {
   collection,
   getDoc,
   getDocs,
+  getFirestore,
+  setDoc,
   doc,
   query,
   orderBy,
@@ -15,7 +17,6 @@ import {
   where,
   onSnapshot,
 } from "firebase/firestore";
-import { getFirestore, setDoc } from "firebase/firestore";
 export const state = () => ({
   theme: true,
   loggedIn: false,
@@ -138,52 +139,55 @@ export const mutations = {
       state.addedDetails = false;
     }
   },
-   signup(state) {
+  async signup(state) {
     let user = state.userProfile;
 
-    const { mob, yob, name, password, email, dob,id } = user;
+    const { mob, yob, name, password, email, dob, id } = user;
     var regex = /[^\s@]+@[^\s@]+\.[^\s@]+/;
     if (regex.test(user.email)) {
       state.loading = true;
-      createUserWithEmailAndPassword(
-        firebaseAuth,
-        email,
-        password
-      )
+      createUserWithEmailAndPassword(firebaseAuth, email, password)
         .then((userCredential) => {
-          state.loggedIn = true
+          state.loggedIn = true;
           id = userCredential.user.reloadUserInfo.localId;
           localStorage.setItem(
             "userid",
             userCredential.user.reloadUserInfo.localId
           );
           // localStorage.setItem("Is-logged", false);
-          state.loading = false
-
+          state.loading = false;
         })
         .catch((err) => {
           state.loading = false;
           state.error = true;
           state.errMssg = err.message;
+          console.log(state.error, state.errMssg);
+
           setTimeout(() => {
             state.error = false;
             state.errMssg = "";
           }, 10000);
         })
-        // .then(() => {
-        //   setDoc(doc(db, "User", id), {
-        //     Email: email,
-        //     password: password,
-        //     Username: name,
-        //     DOB: dob + mob + yob
-           
-        //   });
-        //   state.loading = false;
-        // })
-        .then(()=>{
+        .then(() => {
+          setDoc(doc(db, "User", id), {
+            Email: email,
+            password: password,
+            Username: name,
+            DOB: dob + mob + yob,
+          });
+          state.loading = false;
           this.app.router.push("/");
         })
-    
+        .catch((err) => {
+          state.loading = false;
+          state.error = true;
+          state.errMssg = err;
+          console.log(state.error, state.errMssg);
+          setTimeout(() => {
+            state.error = false;
+            state.errMssg = "";
+          }, 10000);
+        });
     } else {
       state.error = true;
       state.errMsg = "Enter a valid email";
@@ -192,5 +196,16 @@ export const mutations = {
         state.errMssg = "";
       }, 20000);
     }
+  },
+  logout() {
+    signOut(firebaseAuth)
+      .then(() => {
+        state.loggedIn = false;
+        localStorage.removeItem("userid");
+        this.app.router.push("/Explore");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
 };

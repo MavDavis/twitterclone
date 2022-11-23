@@ -1,7 +1,7 @@
 <template>
   <div class="w-full" @mouseover="$store.commit('checkForaddedDetails')">
     <register :logo="true" @closeModal="closeModal">
-      <p class="text-lg flex justify-center px-4 text-red-300" v-if="$store.state.error">{{$store.state.errMsg}}</p>
+      <p class="text-lg flex justify-center px-4 text-red-300" v-if="$store.state.error">{{$store.state.errMssg}}</p>
 
       <div class="flex justify-start px-4 pl-16 w-full">
         <div class="w-fit"><page-header name="Create your account" /></div>
