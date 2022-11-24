@@ -1,6 +1,6 @@
 <template>
     <section class="relative w-full h-full">
-    <page-header name="Home"/>
+    <page-header name="Home" />
       <div class="relative w-full">
         <!-- top -->
   

@@ -1,7 +1,9 @@
 <template>
     <div :class="{ dark: darkMode }">
+      <p @click="$store.commit('logout')">hy</p>
+
       <ModalTweet v-if="IWantToTweet"/>
-  
+  <Loading v-if="$store.state.Loading"/>
       <div
         class="w-screen max-w-full h-full relative min-h-screen flex"
       >

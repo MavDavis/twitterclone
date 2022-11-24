@@ -7,6 +7,7 @@
     </div>
     <div class="flex flex-col items-center w-full  mx-auto px-8 ">
       <button
+      @click="$store.commit('googleSignup')"
         class="w-full xs:w-3/5 flex justify-center  border rounded-full p-1 text-sm col hover:border-dim-100"
       >
       <img class="h-5 mr-2" src="../../assets/google.jpg" alt=""><span> Google sign in  </span>

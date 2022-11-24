@@ -1,6 +1,9 @@
 import { createStore } from "vuex";
 import { firebaseAuth } from "../firebase/index";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider  } from "firebase/auth";
+
+const provider = new GoogleAuthProvider();
+
 import { db } from "../firebase";
 import { signOut } from "firebase/auth";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -142,34 +145,24 @@ export const mutations = {
   async signup(state) {
     let user = state.userProfile;
 
-    const { mob, yob, name, password, email, dob, id } = user;
+    const { mob, yob, name, password, email, dob,  } = user;
     var regex = /[^\s@]+@[^\s@]+\.[^\s@]+/;
     if (regex.test(user.email)) {
       state.loading = true;
       createUserWithEmailAndPassword(firebaseAuth, email, password)
         .then((userCredential) => {
           state.loggedIn = true;
-          id = userCredential.user.reloadUserInfo.localId;
-          localStorage.setItem(
-            "userid",
-            userCredential.user.reloadUserInfo.localId
-          );
+          user.id = userCredential.user.uid;
+          console.log(user.id);
+          // localStorage.setItem(
+          //   "userid",
+          //   userCredential.user.reloadUserInfo.localId
+          // );
           // localStorage.setItem("Is-logged", false);
           state.loading = false;
         })
-        .catch((err) => {
-          state.loading = false;
-          state.error = true;
-          state.errMssg = err.message;
-          console.log(state.error, state.errMssg);
-
-          setTimeout(() => {
-            state.error = false;
-            state.errMssg = "";
-          }, 10000);
-        })
         .then(() => {
-          setDoc(doc(db, "User", id), {
+          setDoc(doc(db, "User", user.id.toString()), {
             Email: email,
             password: password,
             Username: name,
@@ -197,15 +190,39 @@ export const mutations = {
       }, 20000);
     }
   },
-  logout() {
+  googleSignup(state){
+    console.log('hy');
+
+    signInWithPopup(firebaseAuth, provider)
+    .then((result) => {
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      console.log(user);
+      this.app.router.push("/");
+
+    }).catch((error) => {
+      const errorCode = error.code;
+console.log(error.message)
+      const email = error.customData.email;
+      const credential = GoogleAuthProvider.credentialFromError(error);
+    });
+
+  },
+  logout(state) {
+    console.log(firebaseAuth.currentUser);
+
+    state.loading = true
     signOut(firebaseAuth)
-      .then(() => {
-        state.loggedIn = false;
-        localStorage.removeItem("userid");
+    .then(() => {
+      state.loggedIn = false;
+      localStorage.removeItem("userid");
+      console.log(firebaseAuth.currentUser);
         this.app.router.push("/Explore");
+        state.loading = false
       })
       .catch((err) => {
         console.log(err);
       });
   },
 };
+
