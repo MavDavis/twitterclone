@@ -1,6 +1,11 @@
 import { createStore } from "vuex";
 import { firebaseAuth } from "../firebase/index";
-import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider  } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
 
 const provider = new GoogleAuthProvider();
 
@@ -22,6 +27,7 @@ import {
 } from "firebase/firestore";
 export const state = () => ({
   theme: true,
+  sidebarSide:true,
   loggedIn: false,
   userProfile: {
     name: "",
@@ -145,7 +151,7 @@ export const mutations = {
   async signup(state) {
     let user = state.userProfile;
 
-    const { mob, yob, name, password, email, dob,  } = user;
+    const { mob, yob, name, password, email, dob } = user;
     var regex = /[^\s@]+@[^\s@]+\.[^\s@]+/;
     if (regex.test(user.email)) {
       state.loading = true;
@@ -190,39 +196,51 @@ export const mutations = {
       }, 20000);
     }
   },
-  googleSignup(state){
-    console.log('hy');
-
+  userDetail(state, payload){
+    state.loggedIn = true
+    console.log(payload);
+  },
+  googleSignup(state) {
+   let res = ''
     signInWithPopup(firebaseAuth, provider)
-    .then((result) => {
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      console.log(user);
-      this.app.router.push("/");
-
-    }).catch((error) => {
-      const errorCode = error.code;
-console.log(error.message)
-      const email = error.customData.email;
-      const credential = GoogleAuthProvider.credentialFromError(error);
-    });
-
+      .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+         res = (result);
+      
+      }).then(() => {
+      let user = res.user
+        setDoc(doc(db, "User", user.uid.toString()), {
+          Email: user.email,
+          password: '',
+          Username: user.displayName,
+          DOB: '',
+        });
+        state.loading = false;
+        state.loggedIn =  true
+        this.app.router.push("/");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        console.log(error.message);
+        const email = error.customData.email;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+      });
   },
   logout(state) {
     console.log(firebaseAuth.currentUser);
 
-    state.loading = true
+    state.loading = true;
     signOut(firebaseAuth)
-    .then(() => {
-      state.loggedIn = false;
-      localStorage.removeItem("userid");
-      console.log(firebaseAuth.currentUser);
+      .then(() => {
+        state.loggedIn = false;
+        localStorage.removeItem("userid");
+        console.log(firebaseAuth.currentUser);
         this.app.router.push("/Explore");
-        state.loading = false
+        state.loading = false;
       })
       .catch((err) => {
         console.log(err);
       });
   },
 };
-
