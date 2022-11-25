@@ -1,8 +1,8 @@
 <template>
   <div :class="{ dark: darkMode }">
-    <sidebarSide v-if="$store.state.sidebarSide" />
+<div v-if="!loading"  >
+  <sidebarSide v-if="$store.state.sidebarSide" />
     <ModalTweet v-if="IWantToTweet" />
-    <Loading v-if="$store.state.Loading" />
     <div class="w-screen max-w-full h-full relative min-h-screen flex">
       <!-- LeftSideBar -->
       <div class="lg:w-1/4 xxs:w-1/6 w-0 h-screen sticky top-0">
@@ -56,6 +56,9 @@
         </button>
       </div>
     </div>
+</div>
+<Loading v-else/>
+
   </div>
 </template>
 <script>
@@ -70,6 +73,7 @@ export default {
     return {
       darkMode: false,
       loggedIn: false,
+      loading:true,
       IWantToTweet: false,
       links: [
         { icon: "fas  fa-house", name: "Home", params: "index" },
@@ -80,6 +84,7 @@ export default {
     };
   },
   mounted() {
+    this.checkRoute();
     onAuthStateChanged(firebaseAuth, (user) => {
       // this.$store.commit('updateUser', user);
       if (user) {
@@ -88,23 +93,23 @@ export default {
         console.log("please log in");
       }
     });
+    
+    this.loading = false;
+
   },
   methods: {
     checkRoute() {
-      console.log('hy');
       onAuthStateChanged(firebaseAuth, (user) => {
         if (user === undefined || user === null) {
           if (
-            this.$route.name === "Login" ||
-            this.$route.name === "ForgotPassword" ||
-            this.$route.name === "Register"
+            this.$route.name.toLowerCase() !== "login" &&
+            this.$route.name.toLowerCase() !== "forgotPassword" &&
+            this.$route.name.toLowerCase() !== "signup"
           ) {
             this.$router.push("/Explore");
           } else {
             return
           }
-        } else {
-          console.log("please log in");
         }
       });
     },
