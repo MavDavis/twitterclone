@@ -20,16 +20,7 @@
         <ul class="flex justify-between items-center w-screen relative">
           <li v-for="(item, ind) in links" :key="ind">
             <NuxtLink
-              class="
-                flex
-                items-center
-                px-2
-                py-1
-                text-lg
-                rounded-full
-                my-1
-                hover:bg-slate-200
-              "
+              class="flex items-center px-2 py-1 text-lg rounded-full my-1 hover:bg-slate-200"
               :to="{ name: item.params ? item.params : item.name }"
             >
               <i :class="item.icon"></i>
@@ -39,21 +30,7 @@
       </nav>
     </div>
     <div
-      class="
-        w-full
-        fixed
-        bottom-0
-        left-0
-        h-fit
-        py-2
-        xs:bg-dim-500
-        bg-white
-        flex
-        sm:pl-40
-        xs:pl-10
-        pl-4
-        justify-between
-      "
+      class="w-full fixed bottom-0 left-0 h-fit py-2 xs:bg-dim-500 bg-white flex sm:pl-40 xs:pl-10 pl-4 justify-between"
       v-if="!$store.state.loggedIn"
     >
       <div class="flex-col items-center xs:flex hidden">
@@ -65,54 +42,15 @@
         </p>
       </div>
       <div
-        class="
-          flex
-          items-center
-          xs:justify-start
-          justify-between
-          w-full
-          xs:w-1/3
-          sm:w-1/4
-        "
+        class="flex items-center xs:justify-start justify-between w-full xs:w-1/3 sm:w-1/4"
       >
         <button
-          class="
-            flex
-            xs:border
-            items-center
-            justify-center
-            w-1/2
-            mr-2
-            relative
-            py-1
-            text-lg
-            font-bold
-            rounded-full
-            hover:bg-dim-600
-            bg-dim-500
-            text-white
-          "
+          class="flex xs:border items-center justify-center w-1/2 mr-2 relative py-1 text-lg font-bold rounded-full hover:bg-dim-600 bg-dim-500 text-white"
         >
           <NuxtLink class="w-full" to="/Login">Login</NuxtLink>
         </button>
         <button
-          class="
-            flex
-            xs:border-0
-            border-2
-            items-center
-            justify-center
-            w-1/2
-            relative
-            mr-2
-            py-1
-            text-lg
-            font-bold
-            rounded-full
-            hover:bg-slate-200
-            bg-white
-            text-dim-900
-          "
+          class="flex xs:border-0 border-2 items-center justify-center w-1/2 relative mr-2 py-1 text-lg font-bold rounded-full hover:bg-slate-200 bg-white text-dim-900"
         >
           <NuxtLink class="w-full" to="/Signup">Signup</NuxtLink>
         </button>
@@ -122,41 +60,61 @@
 </template>
 <script>
 import { firebaseAuth } from "../firebase/index";
-    import { getAuth, onAuthStateChanged } from "firebase/auth";
-  import SidebarSide from '../components/sidebar/side.vue'
-import SidebarLeft from '../components/sidebar/left.vue'
-import ModalTweet from '../components/modal/tweet.vue'
-import PagesIndex from '../components/pages/index.vue'
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import SidebarSide from "../components/sidebar/side.vue";
+import SidebarLeft from "../components/sidebar/left.vue";
+import ModalTweet from "../components/modal/tweet.vue";
+import PagesIndex from "../components/pages/index.vue";
 export default {
-
- data(){
-  return{
-     darkMode:(false),
-   loggedIn :(false),
-   IWantToTweet:(false),
-  links:[
-  {icon:"fas  fa-house", name:'Home',params:'index'},
-  {icon:'fa-solid fa-search', name:'Explore'},
-  {icon:'fa-regular fa-bell', name:'Notification'},
-  {icon:'fa-regular fa-envelope', name:'Messages', params:'chat'},
-  ],
-};
-}
-,
+  data() {
+    return {
+      darkMode: false,
+      loggedIn: false,
+      IWantToTweet: false,
+      links: [
+        { icon: "fas  fa-house", name: "Home", params: "index" },
+        { icon: "fa-solid fa-search", name: "Explore" },
+        { icon: "fa-regular fa-bell", name: "Notification" },
+        { icon: "fa-regular fa-envelope", name: "Messages", params: "chat" },
+      ],
+    };
+  },
   mounted() {
     onAuthStateChanged(firebaseAuth, (user) => {
       // this.$store.commit('updateUser', user);
-      if(user){
-        this.$store.commit('userDetail', user)
-      }else{
-        console.log('please log in');
+      if (user) {
+        this.$store.commit("userDetail", user);
+      } else {
+        console.log("please log in");
       }
-  })
-  
-
-}
-
-}
+    });
+  },
+  methods: {
+    checkRoute() {
+      console.log('hy');
+      onAuthStateChanged(firebaseAuth, (user) => {
+        if (user === undefined || user === null) {
+          if (
+            this.$route.name === "Login" ||
+            this.$route.name === "ForgotPassword" ||
+            this.$route.name === "Register"
+          ) {
+            this.$router.push("/Explore");
+          } else {
+            return
+          }
+        } else {
+          console.log("please log in");
+        }
+      });
+    },
+  },
+  watch: {
+    $route() {
+      this.checkRoute();
+    },
+  },
+};
 </script>
 
 <style>

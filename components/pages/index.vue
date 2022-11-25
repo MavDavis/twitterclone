@@ -15,18 +15,24 @@
 </template>
 
 <script>
-export default{
-  data(){
-    return{
-    }
-  },
-    mounted(){
-      if (this.$store.state.loggedIn == false) {
-this.$router.push("/Explore");
-    }
+import { firebaseAuth } from "../../firebase/index";
+    import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+export default {
+
+  mounted() {
+    onAuthStateChanged(firebaseAuth, (user) => {
+      // this.$store.commit('updateUser', user);
+      if(user){
+        this.$store.commit('userDetail', user)
+      }else{
+        console.log('please log in');
+this.$router.push('/Explore')
+      }
+  })
   
-}}
 
+}
+
+}
 </script>
-
-<style></style>
