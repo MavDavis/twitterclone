@@ -2,8 +2,7 @@
   <div class="flex w-full">
     <div class="xs:w-5/6 w-full sm:w-3/5  border-x min-h-screen h-full ">
       <div
-        class="sticky h-fit top-0 left-0 z-40 bg-white w-full px-4 flex flex-col justify-start"
-        :class="[py ? 'py-0' : 'py-4']"
+        class="sticky h-fit top-0 left-0 z-40 bg-white w-full px-4 flex flex-col justify-start my-4"
       >
         <div class="flex justify-between items-center">
           <div class="flex items-center">

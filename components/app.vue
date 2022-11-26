@@ -1,7 +1,8 @@
 <template>
-  <div :class="{ dark: darkMode }">
+  <div :class="{ dark: darkMode }" @click="toggleSidebar()">
 <div v-if="!loading"  >
   <sidebarSide v-if="$store.state.sidebarSide" />
+
     <ModalTweet v-if="IWantToTweet" />
     <div class="w-screen max-w-full h-full relative min-h-screen flex">
       <!-- LeftSideBar -->
@@ -98,6 +99,13 @@ export default {
 
   },
   methods: {
+    toggleSidebar(){
+      if(this.$store.state.sidebarSide == true){
+// this.$store.commit('toggleSidebar')
+      }else{
+        return
+      }
+    },
     checkRoute() {
       onAuthStateChanged(firebaseAuth, (user) => {
         if (user === undefined || user === null) {

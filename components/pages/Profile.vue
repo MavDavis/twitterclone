@@ -2,7 +2,7 @@
   <div class="flex w-full h-full relative">
     <div class="xs:w-5/6 w-full sm:w-3/5  border-x min-h-screen h-full relative">
       <!-- top -->
-      <div>
+      <div class="my-4">
         <page-header :name="user.name" nomOfTweets="61" :py="true" />
       </div>
       <div class="relative w-full h-fit">

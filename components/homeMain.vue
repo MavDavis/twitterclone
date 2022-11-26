@@ -1,7 +1,7 @@
 <template>
     <section class="relative w-full h-full">
     <page-header name="Home" />
-      <div class="relative w-full">
+      <div class="relative w-full hidden xxs:block">
         <!-- top -->
   
         <div class="w-full pl-4  py-2 flex justify-start items-center">

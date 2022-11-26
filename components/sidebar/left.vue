@@ -33,7 +33,10 @@
         </ul>
       </nav>
     </div>
+    <div v-if="showLogoutModal" class="modal shadow-md rounded-xl px-6 py-11 absolute bottom-28 flex  mt-auto">
+    <p @click="$store.commit('logout')" class="text-xl cursor-pointer">Logout out Username</p></div>
     <div
+    @click="showLogoutModal = true"
       v-if="$store.state.loggedIn"
       class="absolute cursor-pointer bottom-0 mb-5 hover:bg-slate-300 rounded-full p-2 xs:pr-5 justify-start items-center flex w-fit"
     >
@@ -43,7 +46,7 @@
         <img class="relative" src="" alt="" />
       </div>
       <div class="lg:flex flex-col items-center hidden">
-        <p class="text-sm font-semibold">Username</p>
+        <p class="text-sm font-semibold">{{$store.state.userProfile.name}}</p>
         <p class="text-xs font-light">@nickname</p>
       </div>
       <div class="icon ml-8 hidden lg:block">
@@ -59,6 +62,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 export default {
   data() {
     return {
+      showLogoutModal:false,
       links: [
         { icon: "fas  fa-house", name: "Home", params: "index" },
         { icon: "fa-regular fa-hashtag", name: "Explore", loggedIn: true },
@@ -83,10 +87,9 @@ export default {
 };
 </script>
 <style scoped>
-/* @media(max-width:980px){
-  .name
-  {
-    display: none;
-  }
-} */
+.modal{
+width: 260px;
+ min-height: 30px;
+height:fit-content;
+}
 </style>

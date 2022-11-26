@@ -27,7 +27,7 @@ import {
 } from "firebase/firestore";
 export const state = () => ({
   theme: true,
-  sidebarSide:true,
+  sidebarSide:false,
   loggedIn: false,
   userProfile: {
     name: "",
@@ -243,4 +243,7 @@ export const mutations = {
         console.log(err);
       });
   },
+  toggleSidebar(state){
+state.sidebarSide = !state.sidebarSide
+  }
 };
