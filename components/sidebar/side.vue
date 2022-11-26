@@ -49,7 +49,7 @@
             v-for="(item, ind) in links"
             :key="ind"
             class="my-3 w-full"
-            @click="item.methods()"
+            @click="twoMethod(ind)"
           >
             <div
               class="flex items-center py-1 text-lg rounded-full font-bold hover:bg-slate-200"
@@ -96,19 +96,22 @@ export default {
     };
   },
   methods: {
-    twoMethods() {
-      this.$store.commit("toggleSidebar");
-      this.$router.push("/profile");
-    },
-    twoMethods1() {
-      this.$store.commit("toggleSidebar");
-      this.$router.push("/Bookmark");
-    },
-    twoMethods2() {
-      this.$store.commit("toggleSidebar");
+    twoMethod(ind) {
+      if(ind === 0){
+      this.$router.push("/profile");}
+      else if (ind == 1){
+      this.$router.push("/Bookmark")
+      }else if(ind == 2){
       this.$router.push("/List");
-    },
+      }
+      this.$store.commit("toggleSidebar");
+
   },
+  twoMethods(){
+    this.$store.commit("toggleSidebar");
+      this.$router.push("/profile");
+  }
+}
 };
 </script>
 

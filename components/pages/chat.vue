@@ -1,6 +1,9 @@
 <template>
   <div class="flex w-full relative h-full body">
-    <div class="w-2/5 border-x min-h-screen h-full">
+    <div
+      class="xs:w-2/5 w-full border-x min-h-screen h-full xs:px-0 px-4"
+      v-if="showchatUsers"
+    >
       <searchbar placeholder="search direct message" class="p-4" />
       <div
         v-for="(msg, ind) in chat"
@@ -38,7 +41,12 @@
       </div>
     </div>
     <!-- Right Sidebar -->
-    <div class="w-3/5 h-full relative">
+    
+    <div
+      class="xs:w-3/5 w-full h-full relative xs:px-0 px-4"
+      v-if="showchatMessages"
+    >
+    <div v-if="!showchatUsers" class="flex justify-start items-center p-4 " @click="showChatUsersAndCloseChatMessages"> <i class="fas fa-chevron-left text-dim-500 text-lg font-semibold hover:bg-dim-100 rounded-full p-2"></i></div>
       <!-- profile -->
 
       <div
@@ -72,15 +80,17 @@
           ></i
           ><i
             class="absolute z-50 top-1 left-7 fa-solid fa-face-smile cursor-pointer text-sm text-dim-500 p-1 rounded-full hover:bg-dim-100"
-          ></i
-          >
+          ></i>
           <input
-          v-model="newMessage"
+            v-model="newMessage"
             placeholder="Start a new message"
             class="relative block p-2 pl-16 w-full text-sm text-gray-900 rounded-full focus:outline-none active:outline-none active:border-dim-100 focus:ring-1 focus:ring-dim-100 bg-slate-200"
           />
-          <i @click="sendMessage" class="fa fa-paper-plane absolute z-50 top-1 right-5 cursor-pointer text-sm  p-1 rounded-full hover:bg-dim-100" :class="[newMessage.length > 0 ? 'text-dim-500':'text-dim-100']"></i>
-
+          <i
+            @click="sendMessage"
+            class="fa fa-paper-plane absolute z-50 top-1 right-5 cursor-pointer text-sm p-1 rounded-full hover:bg-dim-100"
+            :class="[newMessage.length > 0 ? 'text-dim-500' : 'text-dim-100']"
+          ></i>
         </div>
       </div>
       <div
@@ -103,10 +113,31 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-
-const chat = ref(
-  [
+import { ref, onMounted } from "vue";
+const showchatMessages = ref(null);
+const showchatUsers = ref(null);
+const showChatUsersAndCloseChatMessages = ()=>{
+  showchatUsers.value = true;
+    showchatMessages.value = false;
+}
+window.addEventListener("resize", () => {
+  if (window.innerWidth < 614) {
+    showchatUsers.value = true;
+    showchatMessages.value = false;
+  } else {
+    showchatMessages.value = true;
+    showchatUsers.value = true;  }
+});
+onMounted(() => {
+  if (window.innerWidth < 614) {
+    showchatUsers.value = true;
+    showchatMessages.value = false;
+  } else {
+    showchatMessages.value = true;
+    showchatUsers.value = true;
+  }
+});
+const chat = ref([
   {
     name: "Jeyi",
     nickname: "Jeyvers",
@@ -145,28 +176,35 @@ const chat = ref(
   },
 ]);
 const messages = ref([]);
-const newMessage = ref('')
+const newMessage = ref("");
 const user = ref({});
 const showChat = (id) => {
+  if (window.innerWidth < 614) {
+    showchatUsers.value = false;
+    showchatMessages.value = true;
+  } else {
+    showchatMessages.value = true;
+    showchatUsers.value = true;
+  }
   let msg = chat.value.find((item) => item.userId == id);
   messages.value = msg.message;
   user.value = {
-    userId : msg.userId,
+    userId: msg.userId,
     name: msg.name,
     nickname: msg.nickname,
     img: msg.img,
   };
 };
-const sendMessage = ( )=>{
-  if(newMessage.value.length > 0){
-  messages.value.push({
-    userId:1,
-    message:newMessage.value,
-    time:'02 september 2022' // get new time
-  })
-  newMessage.value = ''
+const sendMessage = () => {
+  if (newMessage.value.length > 0) {
+    messages.value.push({
+      userId: 1,
+      message: newMessage.value,
+      time: "02 september 2022", // get new time
+    });
+    newMessage.value = "";
   }
-}
+};
 </script>
 
 <style scoped>
