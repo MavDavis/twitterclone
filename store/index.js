@@ -27,7 +27,7 @@ import {
 } from "firebase/firestore";
 export const state = () => ({
   theme: true,
-  sidebarSide:false,
+  sidebarSide: false,
   loggedIn: false,
   userProfile: {
     name: "",
@@ -159,20 +159,74 @@ export const mutations = {
         .then((userCredential) => {
           state.loggedIn = true;
           user.id = userCredential.user.uid;
-          console.log(user.id);
-          // localStorage.setItem(
-          //   "userid",
-          //   userCredential.user.reloadUserInfo.localId
-          // );
-          // localStorage.setItem("Is-logged", false);
+
           state.loading = false;
         })
         .then(() => {
           setDoc(doc(db, "User", user.id.toString()), {
+            Username: name,
+            age: "",
+            DOB: dob + mob + yob,
+
             Email: email,
             password: password,
-            Username: name,
-            DOB: dob + mob + yob,
+            followers: "",
+
+            following: "",
+            id: user.id,
+            chats: [
+              {
+                name: "Admin",
+                nickname: "Mavdavis",
+                userId: 0,
+                message: [
+                  { userId: 0, message: "hy", time: "02-sept,2022" },
+                  {
+                    userId: 0,
+                    message: "Good day. How are you doing?",
+                    time: "02-sept,2022",
+                  },
+                  {
+                    userId: user.id,
+                    message: "I am good and you?",
+                    time: "02-sept,2022",
+                  },
+                  {
+                    userId: 0,
+                    message: "I am okay, thanks.",
+                    time: "02-sept,2023",
+                  },
+                ],
+                img: "",
+              },
+              {
+                name: "Admin2",
+                nickname: "Adole",
+                userId: 2,
+                message: [
+                  { userId: 2, message: "hy", time: "02-sept,2022" },
+                  {
+                    userId: 2,
+                    message: "Do you have those papers ready?",
+                    time: "02-sept,2022",
+                  },
+                  {
+                    userId: user.id,
+                    message: "Not yet, It will be ready soon.",
+                    time: "02-sept,2022",
+                  },
+                  { userId: 2, message: "Okay", time: "02-sept,2022" },
+                ],
+                img: "",
+              },
+            ],
+
+            profileImage: "",
+            about: "",
+            link: "",
+            tweets: "",
+
+            likedTweets: "",
           });
           state.loading = false;
           this.app.router.push("/");
@@ -196,28 +250,83 @@ export const mutations = {
       }, 20000);
     }
   },
-  userDetail(state, payload){
-    state.loggedIn = true
-    console.log(payload);
-  },
+
   googleSignup(state) {
-   let res = ''
+    let res = "";
     signInWithPopup(firebaseAuth, provider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
-         res = (result);
-      
-      }).then(() => {
-      let user = res.user
+        res = result;
+      })
+      .then(() => {
+        let user = res.user;
+       
         setDoc(doc(db, "User", user.uid.toString()), {
           Email: user.email,
-          password: '',
+          password: "",
           Username: user.displayName,
-          DOB: '',
+          DOB: "",
+          followers: "",
+          age: "",
+          following: "",
+          id: user.uid,
+          chats: [
+            {
+              name: "Admin",
+              nickname: "Mavdavis",
+              userId: 0,
+              message: [
+                { userId: 0, message: "hy", time: "02-sept,2022" },
+                {
+                  userId: 0,
+                  message: "Good day. How are you doing?",
+                  time: "02-sept,2022",
+                },
+                {
+                  userId: user.uid,
+                  message: "I am good and you?",
+                  time: "02-sept,2022",
+                },
+                {
+                  userId: 0,
+                  message: "I am okay, thanks.",
+                  time: "02-sept,2023",
+                },
+              ],
+              img: "",
+            },
+            {
+              name: "Admin2",
+              nickname: "Adole",
+              userId: 2,
+              message: [
+                { userId: 2, message: "hy", time: "02-sept,2022" },
+                {
+                  userId: 2,
+                  message: "Do you have those papers ready?",
+                  time: "02-sept,2022",
+                },
+                {
+                  userId: user.uid,
+                  message: "Not yet, It will be ready soon.",
+                  time: "02-sept,2022",
+                },
+                { userId: 2, message: "Okay", time: "02-sept,2022" },
+              ],
+              img: "",
+            },
+          ],
+
+          profileImage: "",
+          about: "",
+          link: "",
+          tweets: "",
+
+          likedTweets: "",
         });
         state.loading = false;
-        state.loggedIn =  true
+        state.loggedIn = true;
         this.app.router.push("/");
       })
       .catch((error) => {
@@ -243,7 +352,23 @@ export const mutations = {
         console.log(err);
       });
   },
-  toggleSidebar(state){
-state.sidebarSide = !state.sidebarSide
-  }
+  toggleSidebar(state) {
+    state.sidebarSide = !state.sidebarSide;
+  },
+  async userDetail(state, payload) {
+    state.loggedIn = true;
+
+    const user = firebaseAuth.currentUser;
+    const docRef = doc(db, "User", user.uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      let db = [];
+      let user = docSnap.data();
+      state.userProfile = user;
+      console.log(state.userProfile);
+    } else {
+      console.log("No such document!");
+    }
+  },
 };
