@@ -46,7 +46,7 @@
       class="xs:w-3/5 w-full h-full relative xs:px-0 px-4"
       v-if="showchatMessages"
     >
-    <div v-if="!showchatUsers" class="flex justify-start items-center p-4 " @click="showChatUsersAndCloseChatMessages"> <i class="fas fa-chevron-left text-dim-500 text-lg font-semibold hover:bg-dim-100 rounded-full p-2"></i></div>
+    <div v-if="!showchatUsers" class="flex fixed top-4 xxs:left-16 left-4 justify-start items-center p-4 " @click="showChatUsersAndCloseChatMessages"> <i class="fas fa-chevron-left text-dim-500 text-lg font-semibold hover:bg-dim-100 rounded-full p-2"></i></div>
       <!-- profile -->
 
       <div
@@ -74,7 +74,7 @@
         >
           <p class="text-sm flex relative">{{ msg.message }}</p>
         </div>
-        <div class="mt-auto relative w-full flex items-center">
+        <div class="mt-auto mb-10 xs:mb-0 relative w-full flex items-center">
           <i
             class="absolute z-50 top-1 left-2 fas fa-image cursor-pointer text-sm text-dim-500 p-1 rounded-full hover:bg-dim-100"
           ></i
@@ -117,6 +117,7 @@ import { ref, onMounted } from "vue";
 const showchatMessages = ref(null);
 const showchatUsers = ref(null);
 const showChatUsersAndCloseChatMessages = ()=>{
+  console.log('hy');
   showchatUsers.value = true;
     showchatMessages.value = false;
 }
