@@ -1,7 +1,7 @@
 <template>
-  <div class="w-full flex justify-center items-center flex-col relative+">
+  <div class="w-full flex justify-center items-center flex-col relative">
     <div class="search-bar flex justify-center items-center w-full">
-      <div class="relative w-full border-b">
+      <div class="relative w-full border-b-2">
         <div
           class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none form-pp"
         >
@@ -18,29 +18,33 @@
         />
       </div>
     </div>
-    <div class="w-full flex justify-end items-center mt-4">
+    <div class="w-full flex justify-end items-center mt-4 px-4">
       <button
+      @click="addChat()"
         class="rounded-full p-2 px-5 flex items-center text-white"
         :class="[nextActive ? 'bg-dim-900 ' : 'bg-slate-600']"
-        :disabled="nextActive ? true : false"
+        :disabled="nextActive ? false : true"
       >
         Next
       </button>
     </div>
     <div v-if="docsIsPopulated" class="w-full relative">
-    <div v-for="item in docs" :key="item.id" class="w-full relative">
-    <div class="flex w-full items-center px-4 py-2 hover:bg-slate-200 cursor-pointer mt-4 relative" @click="nextActive = true">
+      <div v-for="item in docs" :key="item.id" class="w-full relative">
         <div
-          class="justify-center items-center flex img w-8 h-8 rounded-full bg-dim-900 mr-2"
+          class="flex w-full items-center px-4 py-2 hover:bg-slate-200 cursor-pointer mt-4 relative"
+          @click="nextActive = true"
         >
-          <img class="relative" :src="item.data().img" alt="" />
+          <div
+            class="justify-center items-center flex img w-8 h-8 rounded-full bg-dim-900 mr-2"
+          >
+            <img class="relative" :src="item.data().img" alt="" />
+          </div>
+          <div class="flex flex-col justify-center">
+            <h3 class="text-xl font-bold">{{ item.data().Fullname }}</h3>
+            <p class="text-xs">@{{ item.data().Username }}</p>
+          </div>
         </div>
-        <div class="flex flex-col justify-center">
-          <h3 class="text-xl font-bold">{{item.data().Fullname}}</h3>
-          <p class="text-xs">@{{item.data().Username}}</p>
-        </div>
-    </div>
-    </div>
+      </div>
     </div>
   </div>
 </template>
@@ -59,6 +63,9 @@ export default {
     };
   },
   methods: {
+    addChat(){
+      this.$store.commit('addChat', this.docs)
+    },
     async searchUserInModal() {
       const q = query(
         collection(db, "User"),
@@ -73,10 +80,18 @@ export default {
           //   console.log(doc.id, " => ", doc.data());
 
           this.docsIsPopulated = true;
-       if(this.docs.includes(doc)){return}
-       else{   this.docs.push(doc);
-       }
-    });
+let res = this.docs.find(item=> item.id === doc.id)
+if(res == undefined){
+    this.docs.push(doc);
+}else{
+    return
+}
+        //   if (this.docs.indexOf(doc) !== -1) {
+        //     return;
+        //   } else {
+        //     this.docs.push(doc);
+        //   }
+        });
       }
     },
   },

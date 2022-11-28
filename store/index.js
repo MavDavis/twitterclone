@@ -339,4 +339,9 @@ export const mutations = {
       console.log("No such document!");
     }
   },
+  addChat(state, payload){
+payload.forEach(item => {
+  console.log(item.id);
+})
+  }
 };

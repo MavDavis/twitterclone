@@ -202,7 +202,7 @@ const tweets = ref([
 onMounted(() => {});
 </script>
 
-<style>
+<style scoped>
 .width {
   position: relative;
   width: calc(100% - 4rem);

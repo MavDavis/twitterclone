@@ -1,9 +1,9 @@
 <template>
   <div class="flex w-full relative h-full body">
     <div v-if="shoeChatSearchModal">
-      <Register :logo="true" :close="true" @closeModal="closeModal" >
+      <RegisterTwo :logo="true" :close="true" @closeModal="closeModal" class="w-full">
       <message-search @search-event ="searchfromSearchbar()"/>
-      </Register>
+      </RegisterTwo>
     </div>
     <div
       class="xs:w-2/5 w-full border-x min-h-screen h-full xs:px-0 px-4"
