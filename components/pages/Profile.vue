@@ -21,8 +21,8 @@
       <!-- details -->
       <div class="relative top-20 px-4">
         <div class="my-4">
-          <h3 class="text-xl font-bold">{{$store.state.userProfile.Username}}</h3>
-          <p class="text-xs">@{{$store.state.userProfile.Email}}</p>
+          <h3 class="text-xl font-bold">{{$store.state.userProfile.Fullname}}</h3>
+          <p class="text-xs">@{{$store.state.userProfile.Username}}</p>
         </div>
         <!-- about -->
         <p class="text-sm">

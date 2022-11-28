@@ -126,8 +126,11 @@ export const mutations = {
           state.loading = false;
         })
         .then(() => {
+          let str =  name.trim().split(/\s+/);
           setDoc(doc(db, "User", user.id.toString()), {
-            Username: name,
+           Fullname: name,
+          Username : str[0],
+
             age: "",
             DOB: dob + mob + yob,
 
@@ -224,11 +227,13 @@ export const mutations = {
       })
       .then(() => {
         let user = res.user;
-       
+       let str =  user.displayName.trim().split(/\s+/);
         setDoc(doc(db, "User", user.uid.toString()), {
           Email: user.email,
           password: "",
-          Username: user.displayName,
+          Fullname: user.displayName,
+          Username : str[0].toLowerCase(),
+
           DOB: "",
           followers: "",
           age: "",

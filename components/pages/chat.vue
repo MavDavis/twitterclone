@@ -1,10 +1,35 @@
 <template>
   <div class="flex w-full relative h-full body">
+    <div v-if="shoeChatSearchModal">
+      <Register :logo="true" :close="true" @closeModal="closeModal" >
+      <message-search @search-event ="searchfromSearchbar()"/>
+      </Register>
+    </div>
     <div
       class="xs:w-2/5 w-full border-x min-h-screen h-full xs:px-0 px-4"
       v-if="showchatUsers"
     >
-      <searchbar placeholder="search direct message" class="p-4" />
+      <div class="flex w-full items-center">
+        <div class="w-5/6 mr-2">
+          <searchbar placeholder="search direct message" class="p-4" />
+        </div>
+        <div
+          class="w-1/12 p-2 rounded-full hover:bg-dim-50 cursor-pointer"
+          @click="searchUser"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            class="r-18jsvk2 r-4qtqp9 r-yyyyoo r-z80fyv r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-19wmn03"
+          >
+            <g>
+              <path
+                d="M1.998 5.5c0-1.381 1.119-2.5 2.5-2.5h15c1.381 0 2.5 1.119 2.5 2.5V12h-2v-1.537l-8 3.635-8-3.635V18.5c0 .276.224.5.5.5H13v2H4.498c-1.381 0-2.5-1.119-2.5-2.5v-13zm2 2.766l8 3.635 8-3.635V5.5c0-.276-.224-.5-.5-.5h-15c-.276 0-.5.224-.5.5v2.766zM19 18v-3h2v3h3v2h-3v3h-2v-3h-3v-2h3z"
+              ></path>
+            </g>
+          </svg>
+        </div>
+      </div>
       <div
         v-for="(msg, ind) in $store.state.userProfile.chats"
         :key="ind"
@@ -111,6 +136,7 @@
           swimming.
         </p>
         <button
+          @click="searchUser"
           class="text-sm flex items-center justify-center w-40 relative py-2 rounded-full my-1 hover:bg-dim-600 bg-dim-500 text-white"
         >
           New message
@@ -120,60 +146,14 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from "vue";
-import { useStore } from "vuex";
-
-// const showchatMessages = ref(null);
-// const showchatUsers = ref(null);
-// const showChatUsersAndCloseChatMessages = ()=>{
-//   showchatUsers.value = true;
-//     showchatMessages.value = false;
-// }
-// window.addEventListener("resize", () => {
-//   if (window.innerWidth < 614) {
-//     showchatUsers.value = true;
-//     showchatMessages.value = false;
-//   } else {
-//     showchatMessages.value = true;
-//     showchatUsers.value = true;  }
-// });
-onMounted(() => {
-  // if (window.innerWidth < 614) {
-  //   showchatUsers.value = true;
-  //   showchatMessages.value = false;
-  // } else {
-  //   showchatMessages.value = true;
-  //   showchatUsers.value = true;
-  // }
-});
-
-// const messages = ref([]);
-// const newMessage = ref("");
-// const user = ref({});
-// const showChat = (id) => {
-//   if (window.innerWidth < 614) {
-//     showchatUsers.value = false;
-//     showchatMessages.value = true;
-//   } else {
-//     showchatMessages.value = true;
-//     showchatUsers.value = true;
-//   }
-
-// };
-// const sendMessage = () => {
-//   if (newMessage.value.length > 0) {
-//     messages.value.push({
-//       userId: 1,
-//       message: newMessage.value,
-//       time: "02 september 2022", // get new time
-//     });
-//     newMessage.value = "";
-//   }
-// };
-</script>
 <script>
+import messageSearch from '../modal/messageSearch.vue'
+
+
 export default {
+  components:{
+messageSearch
+  },
   created() {
     this.checkResize();
   },
@@ -186,6 +166,7 @@ export default {
       this.showchatMessages = true;
       this.showchatUsers = true;
     }
+    console.log(this.$store.state.userProfile.chats);
     this.chat = this.$store.state.userProfile.chats;
   },
   data() {
@@ -196,9 +177,19 @@ export default {
       showchatMessages: null,
       showchatUsers: null,
       newMessage: "",
+      shoeChatSearchModal: false,
     };
   },
   methods: {
+
+    closeModal() {
+      this.shoeChatSearchModal = false;
+    },
+
+    searchUser() {
+      this.shoeChatSearchModal = true;
+    },
+    
     showChat(id) {
       if (window.innerWidth < 614) {
         this.showchatUsers = false;

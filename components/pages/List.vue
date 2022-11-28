@@ -12,7 +12,7 @@
 
             <div>
               <p class="text-lg font-bold">Lists</p>
-              <p class="text-xs">@mavdaves</p>
+              <p class="text-xs mb-2">@{{$store.state.userProfile.Username}}</p>
             </div>
           </div>
           <div class="px-2 py-1 cursor-pointer hover:bg-slate-200 rounded-full">

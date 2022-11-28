@@ -23,12 +23,17 @@
 
 <script>
 export default {
-  props:['logo'],
+  props:['logo', 'close'],
   methods:{
     closeModal(){
       if(this.logo){
         this.$emit('closeModal')
-    }else{
+    }
+    else if(this.close){
+      this.$emit('closeModal')
+
+    }
+    else{
       this.$router.push("/Explore");
     }
     }
