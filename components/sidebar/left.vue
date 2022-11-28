@@ -46,8 +46,8 @@
         <img class="relative" src="" alt="" />
       </div>
       <div class="lg:flex flex-col items-center hidden">
-        <p class="text-sm font-semibold">{{$store.state.userProfile.name}}</p>
-        <p class="text-xs font-light">@nickname</p>
+        <p class="text-sm font-semibold">{{$store.state.userProfile.Username}}</p>
+        <p class="text-xs font-light">{{$store.state.userProfile.Email}}</p>
       </div>
       <div class="icon ml-8 hidden lg:block">
         <i class="fa-solid fa-ellipsis"></i>

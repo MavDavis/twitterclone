@@ -6,7 +6,7 @@
     >
       <searchbar placeholder="search direct message" class="p-4" />
       <div
-        v-for="(msg, ind) in chat"
+        v-for="(msg, ind) in $store.state.userProfile.chats"
         :key="ind"
         @click="showChat(msg.userId)"
         class="cursor-pointer flex w-full items-center hover:bg-slate-100 p-4"
@@ -41,12 +41,20 @@
       </div>
     </div>
     <!-- Right Sidebar -->
-    
+
     <div
       class="xs:w-3/5 w-full h-full relative xs:px-0 px-4"
       v-if="showchatMessages"
     >
-    <div v-if="!showchatUsers" class="flex fixed top-4 xxs:left-16 left-4 justify-start items-center p-4 " @click="showChatUsersAndCloseChatMessages"> <i class="fas fa-chevron-left text-dim-500 text-lg font-semibold hover:bg-dim-100 rounded-full p-2"></i></div>
+      <div
+        v-if="!showchatUsers"
+        class="flex fixed top-4 xxs:left-16 left-4 justify-start items-center p-4"
+        @click="showChatUsersAndCloseChatMessages"
+      >
+        <i
+          class="fas fa-chevron-left text-dim-500 text-lg font-semibold hover:bg-dim-100 rounded-full p-2"
+        ></i>
+      </div>
       <!-- profile -->
 
       <div
@@ -114,100 +122,129 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-const showchatMessages = ref(null);
-const showchatUsers = ref(null);
-const showChatUsersAndCloseChatMessages = ()=>{
-  console.log('hy');
-  showchatUsers.value = true;
-    showchatMessages.value = false;
-}
-window.addEventListener("resize", () => {
-  if (window.innerWidth < 614) {
-    showchatUsers.value = true;
-    showchatMessages.value = false;
-  } else {
-    showchatMessages.value = true;
-    showchatUsers.value = true;  }
-});
+import { useStore } from "vuex";
+
+// const showchatMessages = ref(null);
+// const showchatUsers = ref(null);
+// const showChatUsersAndCloseChatMessages = ()=>{
+//   showchatUsers.value = true;
+//     showchatMessages.value = false;
+// }
+// window.addEventListener("resize", () => {
+//   if (window.innerWidth < 614) {
+//     showchatUsers.value = true;
+//     showchatMessages.value = false;
+//   } else {
+//     showchatMessages.value = true;
+//     showchatUsers.value = true;  }
+// });
 onMounted(() => {
-  if (window.innerWidth < 614) {
-    showchatUsers.value = true;
-    showchatMessages.value = false;
-  } else {
-    showchatMessages.value = true;
-    showchatUsers.value = true;
-  }
+  // if (window.innerWidth < 614) {
+  //   showchatUsers.value = true;
+  //   showchatMessages.value = false;
+  // } else {
+  //   showchatMessages.value = true;
+  //   showchatUsers.value = true;
+  // }
 });
-const chat = ref([
-  {
-    name: "Jeyi",
-    nickname: "Jeyvers",
-    userId: 0,
-    message: [
-      { userId: 0, message: "hy", time: "02-sept,2022" },
-      {
-        userId: 0,
-        message: "Good day. How are you doing?",
-        time: "02-sept,2022",
-      },
-      { userId: 1, message: "I am good and you?", time: "02-sept,2022" },
-      { userId: 0, message: "I am okay, thanks.", time: "02-sept,2023" },
-    ],
-    img: "",
+
+// const messages = ref([]);
+// const newMessage = ref("");
+// const user = ref({});
+// const showChat = (id) => {
+//   if (window.innerWidth < 614) {
+//     showchatUsers.value = false;
+//     showchatMessages.value = true;
+//   } else {
+//     showchatMessages.value = true;
+//     showchatUsers.value = true;
+//   }
+
+// };
+// const sendMessage = () => {
+//   if (newMessage.value.length > 0) {
+//     messages.value.push({
+//       userId: 1,
+//       message: newMessage.value,
+//       time: "02 september 2022", // get new time
+//     });
+//     newMessage.value = "";
+//   }
+// };
+</script>
+<script>
+export default {
+  created() {
+    this.checkResize();
   },
-  {
-    name: "Babe",
-    nickname: "Adole",
-    userId: 2,
-    message: [
-      { userId: 2, message: "hy", time: "02-sept,2022" },
-      {
-        userId: 2,
-        message: "Do you have those papers ready?",
-        time: "02-sept,2022",
-      },
-      {
-        userId: 1,
-        message: "Not yet, It will be ready soon.",
-        time: "02-sept,2022",
-      },
-      { userId: 2, message: "Okay", time: "02-sept,2022" },
-    ],
-    img: "",
+  mounted() {
+    this.checkResize();
+    if (window.innerWidth < 614) {
+      this.showchatUsers = true;
+      this.showchatMessages = false;
+    } else {
+      this.showchatMessages = true;
+      this.showchatUsers = true;
+    }
+    this.chat = this.$store.state.userProfile.chats;
   },
-]);
-const messages = ref([]);
-const newMessage = ref("");
-const user = ref({});
-const showChat = (id) => {
-  if (window.innerWidth < 614) {
-    showchatUsers.value = false;
-    showchatMessages.value = true;
-  } else {
-    showchatMessages.value = true;
-    showchatUsers.value = true;
-  }
-  let msg = chat.value.find((item) => item.userId == id);
-  messages.value = msg.message;
-  user.value = {
-    userId: msg.userId,
-    name: msg.name,
-    nickname: msg.nickname,
-    img: msg.img,
-  };
-};
-const sendMessage = () => {
-  if (newMessage.value.length > 0) {
-    messages.value.push({
-      userId: 1,
-      message: newMessage.value,
-      time: "02 september 2022", // get new time
-    });
-    newMessage.value = "";
-  }
+  data() {
+    return {
+      chat: [],
+      messages: [],
+      user: null,
+      showchatMessages: null,
+      showchatUsers: null,
+      newMessage: "",
+    };
+  },
+  methods: {
+    showChat(id) {
+      if (window.innerWidth < 614) {
+        this.showchatUsers = false;
+        this.showchatMessages = true;
+      } else {
+        this.showchatMessages = true;
+        this.showchatUsers = true;
+      }
+      let msg = this.chat.find((item) => item.userId == id);
+      this.messages = msg.message;
+      this.user = {
+        userId: msg.userId,
+        name: msg.name,
+        nickname: msg.nickname,
+        img: msg.img,
+      };
+    },
+
+    showChatUsersAndCloseChatMessages() {
+      this.showchatUsers = true;
+      this.showchatMessages = false;
+    },
+    sendMessage() {
+      if (this.newMessage.length > 0) {
+        this.messages.push({
+          userId: 1,
+          message: this.newMessage,
+          time: "02 september 2022", // get new time
+        });
+        this.newMessage = "";
+      }
+    },
+    checkResize() {
+      window.addEventListener("resize", () => {
+        if (window.innerWidth < 614) {
+          this.showchatUsers = true;
+          this.showchatMessages = false;
+        } else {
+          this.showchatMessages = true;
+          this.showchatUsers = true;
+        }
+      });
+    },
+  },
 };
 </script>
-
 <style scoped>
 .chat-para {
   max-width: 75%;

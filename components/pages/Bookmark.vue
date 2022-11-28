@@ -3,7 +3,7 @@
     <div class="xs:w-5/6 w-full sm:w-3/5  border-x min-h-screen h-full">
       <div class="flex flex-col justify-center pt-4">
         <page-header name="Bookmarks" :py = true />
-        <p class="px-4">@Mavdaves</p>
+        <p class="px-4">{{$store.state.userProfile.Username}}</p>
       </div>
       <div class="flex justify-center items-center flex-col px-4">
         <img src="../../assets/bookmark.png" alt="">

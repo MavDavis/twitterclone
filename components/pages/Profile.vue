@@ -3,7 +3,7 @@
     <div class="xs:w-5/6 w-full sm:w-3/5  border-x min-h-screen h-full relative">
       <!-- top -->
       <div class="my-4">
-        <page-header :name="user.name" nomOfTweets="61" :py="true" />
+        <page-header :name="$store.state.userProfile.Username" nomOfTweets="61" :py="true" />
       </div>
       <div class="relative w-full h-fit">
         <div class="h-40 w-full bg-slate-200 relative"></div>
@@ -21,8 +21,8 @@
       <!-- details -->
       <div class="relative top-20 px-4">
         <div class="my-4">
-          <h3 class="text-xl font-bold">{{ user.name }}</h3>
-          <p class="text-xs">@{{ user.name }}</p>
+          <h3 class="text-xl font-bold">{{$store.state.userProfile.Username}}</h3>
+          <p class="text-xs">@{{$store.state.userProfile.Email}}</p>
         </div>
         <!-- about -->
         <p class="text-sm">
