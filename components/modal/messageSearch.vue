@@ -20,7 +20,7 @@
     </div>
     <div class="w-full flex justify-end items-center mt-4 px-4">
       <button
-      @click="addChat()"
+        @click="addChat()"
         class="rounded-full p-2 px-5 flex items-center text-white"
         :class="[nextActive ? 'bg-dim-900 ' : 'bg-slate-600']"
         :disabled="nextActive ? false : true"
@@ -37,19 +37,23 @@
           <div
             class="justify-center items-center flex img w-8 h-8 rounded-full bg-dim-900 mr-2"
           >
-            <img class="relative" :src="item.data().img" alt="" />
+            <img class="relative" :src="item.img" alt="" />
           </div>
           <div class="flex flex-col justify-center">
-            <h3 class="text-xl font-bold">{{ item.data().Fullname }}</h3>
-            <p class="text-xs">@{{ item.data().Username }}</p>
+            <h3 class="text-xl font-bold">{{ item.Fullname }}</h3>
+            <p class="text-xs">@{{ item.Username }}</p>
           </div>
         </div>
       </div>
+    </div>
+    <div v-if="docsIsEmpty" class="w-full">
+      <p class="text-lg">This Username does not exist</p>
     </div>
   </div>
 </template>
 
 <script>
+let dok = null;
 import { db } from "../../firebase/index";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
@@ -60,12 +64,12 @@ export default {
       docs: [],
       docsIsPopulated: false,
       nextActive: false,
+      docsIsEmpty: false,
     };
   },
   methods: {
-    addChat(){
-      console.log(this.docs);
-      this.$store.commit('addChat', this.docs)
+    addChat() {
+      this.$store.commit("addChat", dok);
     },
     async searchUserInModal() {
       const q = query(
@@ -75,21 +79,17 @@ export default {
 
       const querySnapshot = await getDocs(q);
       if (querySnapshot.empty === true) {
-        console.log("empty");
+        this.docsIsEmpty = true;
       } else {
         querySnapshot.forEach((doc) => {
-          //   console.log(doc.id, " => ", doc.data());
-
           this.docsIsPopulated = true;
-let res = this.docs.find(item=> item.id === doc.id)
-if(res == undefined){
-  console.log(doc.data());
-    this.docs.push(doc.data());
-    console.log(this.docs);
-
-}else{
-    return
-}
+          let res = this.docs.find((item) => item.id === doc.id);
+          if (res == undefined) {
+            dok = doc.data();
+            this.docs = [...this.docs, dok];
+          } else {
+            return;
+          }
         });
       }
     },

@@ -30,40 +30,43 @@
           </svg>
         </div>
       </div>
-      <div
-        v-for="(msg, ind) in $store.state.userProfile.chats"
-        :key="ind"
-        @click="showChat(msg.userId)"
-        class="cursor-pointer flex w-full items-center hover:bg-slate-100 p-4"
-      >
-        <div
-          class="justify-center items-center flex img w-8 h-8 rounded-full bg-dim-900 mr-2"
-        >
-          <img class="relative" :src="msg.img" alt="" />
-        </div>
-        <div class="flex w-full relative flex-col">
-          <div class="flex w-full relative items-center">
-            <p class="text-sm font-semibold mr-2">
-              {{ msg.name.slice(0, 8)
-              }}<span v-if="msg.name.length > 8">...</span>
-            </p>
-            <p class="text-sm mr-auto">
-              @{{ msg.nickname.slice(0, 8)
-              }}<span v-if="msg.nickname.length > 8">...</span>
-            </p>
-            <p class="text-sm">
-              {{ msg.message[msg.message.length - 1].time }}
-            </p>
-          </div>
-          <p class="text-sm">
-            <span v-if="msg.message[msg.message.length - 1].userId != 1">
-              {{ msg.name }} sent
-            </span>
-            <span v-else>You sent </span>
-            {{ msg.message[msg.message.length - 1].message }}
-          </p>
-        </div>
-      </div>
+      <div class="w-full" v-if="$store.state.userProfile.chats.length > 0">
+       <div
+         v-for="(msg, ind) in $store.state.userProfile.chats"
+         :key="ind"
+         @click="showChat(msg.userId)"
+         class="cursor-pointer flex w-full items-center hover:bg-slate-100 p-4"
+       >
+         <div
+           class="justify-center items-center flex img w-8 h-8 rounded-full bg-dim-900 mr-2"
+         >
+           <img class="relative" :src="msg.img" alt="" />
+         </div>
+         <div class="flex w-full relative flex-col">
+           <div class="flex w-full relative items-center">
+             <p class="text-sm font-semibold mr-2">
+               {{ msg.Fullname.slice(0, 8)}}
+               <span v-if="msg.Fullname.length > 8">...</span>
+             </p>
+             <p class="text-sm mr-auto">
+               @{{ msg.Username.slice(0, 8)
+               }}<span v-if="msg.Username.length > 8">...</span>
+             </p>
+             <p class="text-sm" v-if="msg.message.length">
+               {{ msg.message[msg.message.length - 1].time }}
+             </p>
+           </div>
+           <p class="text-sm">
+             <span v-if="msg.message[msg.message.length - 1].userId != 1">
+               {{ msg.name }} sent
+             </span>
+             <span v-else>You sent </span>
+             {{ msg.message[msg.message.length - 1].message }}
+           </p>
+         </div>
+       </div>
+     </div>
+    
     </div>
     <!-- Right Sidebar -->
 
@@ -94,15 +97,15 @@
           >
             <img class="relative" src="" alt="" />
           </div>
-          <p>{{ user.name }}</p>
-          <p>@{{ user.nickname }}</p>
+          <p>{{ user.Fullname }}</p>
+          <p>@{{ user.Username }}</p>
         </div>
         <div
           class="mb-3 w-fit rounded-full px-4 py-2 relative flex justify-center chat-para h-fit items-center"
           v-for="(msg, ind) in messages"
           :key="ind"
           :class="[
-            msg.userId == 1 ? 'bg-dim-500 ml-auto' : 'bg-slate-200 mr-auto',
+            msg.userId == $store.state.userProfile.id ? 'bg-dim-500 ml-auto' : 'bg-slate-200 mr-auto',
           ]"
         >
           <p class="text-sm flex relative">{{ msg.message }}</p>
@@ -115,6 +118,7 @@
             class="absolute z-50 top-1 left-7 fa-solid fa-face-smile cursor-pointer text-sm text-dim-500 p-1 rounded-full hover:bg-dim-100"
           ></i>
           <input
+          @keyup.enter ="sendMessage"
             v-model="newMessage"
             placeholder="Start a new message"
             class="relative block p-2 pl-16 w-full text-sm text-gray-900 rounded-full focus:outline-none active:outline-none active:border-dim-100 focus:ring-1 focus:ring-dim-100 bg-slate-200"
@@ -166,8 +170,8 @@ messageSearch
       this.showchatMessages = true;
       this.showchatUsers = true;
     }
-    console.log(this.$store.state.userProfile.chats);
     this.chat = this.$store.state.userProfile.chats;
+
   },
   data() {
     return {
@@ -191,6 +195,8 @@ messageSearch
     },
     
     showChat(id) {
+      this.chat = this.$store.state.userProfile.chats;
+
       if (window.innerWidth < 614) {
         this.showchatUsers = false;
         this.showchatMessages = true;
@@ -200,10 +206,11 @@ messageSearch
       }
       let msg = this.chat.find((item) => item.userId == id);
       this.messages = msg.message;
-      this.user = {
+
+this.user = {
         userId: msg.userId,
-        name: msg.name,
-        nickname: msg.nickname,
+        Fullname: msg.Fullname,
+        Username: msg.Username,
         img: msg.img,
       };
     },

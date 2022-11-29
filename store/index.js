@@ -142,8 +142,8 @@ export const mutations = {
             id: user.id,
             chats: [
               {
-                name: "Admin",
-                nickname: "Mavdavis",
+                Fullname: "Admin",
+                Username: "Mavdavis",
                 userId: 0,
                 message: [
                   { userId: 0, message: "hy", time: "02-sept,2022" },
@@ -166,8 +166,8 @@ export const mutations = {
                 img: "",
               },
               {
-                name: "Admin2",
-                nickname: "Adole",
+                Fullname: "Admin2",
+                Username: "Adole",
                 userId: 2,
                 message: [
                   { userId: 2, message: "hy", time: "02-sept,2022" },
@@ -241,8 +241,8 @@ export const mutations = {
           id: user.uid,
           chats: [
             {
-              name: "Admin",
-              nickname: "Mavdavis",
+              Fullname: "Admin",
+              Username: "Mavdavis",
               userId: 0,
               message: [
                 { userId: 0, message: "hy", time: "02-sept,2022" },
@@ -265,8 +265,8 @@ export const mutations = {
               img: "",
             },
             {
-              name: "Admin2",
-              nickname: "Adole",
+              Fullname: "Admin2",
+              Username: "Adole",
               userId: 2,
               message: [
                 { userId: 2, message: "hy", time: "02-sept,2022" },
@@ -340,11 +340,17 @@ export const mutations = {
     }
   },
   addChat(state, payload){
-    
-payload.forEach(item => {
-  console.log(payload);
-// item.chat = [...item.chat, {newItem:''}]
-// console.log(item.data());
-})
+   let chats = (state.userProfile.chats); 
+   chats = [...chats,   {
+    Fullname: payload.Fullname,
+    Username: payload.Username,
+    userId: payload.id,
+    message: [],
+    img:payload.img,
+  },]
+  let user = state.userProfile
+//  state.userProfile = {...user, chats};
+
+console.log(state.userProfile, chats);
   }
 };
