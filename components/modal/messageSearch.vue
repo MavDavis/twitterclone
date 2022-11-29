@@ -64,6 +64,7 @@ export default {
   },
   methods: {
     addChat(){
+      console.log(this.docs);
       this.$store.commit('addChat', this.docs)
     },
     async searchUserInModal() {
@@ -82,15 +83,13 @@ export default {
           this.docsIsPopulated = true;
 let res = this.docs.find(item=> item.id === doc.id)
 if(res == undefined){
-    this.docs.push(doc);
+  console.log(doc.data());
+    this.docs.push(doc.data());
+    console.log(this.docs);
+
 }else{
     return
 }
-        //   if (this.docs.indexOf(doc) !== -1) {
-        //     return;
-        //   } else {
-        //     this.docs.push(doc);
-        //   }
         });
       }
     },

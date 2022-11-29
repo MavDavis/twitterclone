@@ -340,8 +340,11 @@ export const mutations = {
     }
   },
   addChat(state, payload){
+    
 payload.forEach(item => {
-  console.log(item.id);
+  console.log(payload);
+// item.chat = [...item.chat, {newItem:''}]
+// console.log(item.data());
 })
   }
 };
