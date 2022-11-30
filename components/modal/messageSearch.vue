@@ -11,7 +11,7 @@
         </div>
         <input
           placeholder="search by username"
-          @keypress.enter="searchUserInModal()"
+          @keypress="debounceSearch()"
           type="search"
           id="default-search"
           class="block p-4 pl-10 w-full text-sm text-gray-900 focus:outline-none"
@@ -31,6 +31,7 @@
       </button>
     </div>
  <div class="w-full" v-if="keydownDone">
+  <linear-loading v-if="loading"/>
   <div v-if="docsIsPopulated" class="w-full relative">
       <div v-for="item in docs" :key="item.id" class="w-full relative">
         <div
@@ -72,9 +73,20 @@ export default {
       docsIsPopulated: false,
       nextActive: false,
       docsIsEmpty: false,
+      debounceTimeout:null,
+      loading:false,
     };
   },
   methods: {
+    debounceSearch: function() {
+      if (this.debounceTimeout){ clearTimeout(this.debounceTimeout)};
+      this.loading= true
+
+      this.debounceTimeout = setTimeout(() => {
+        this.searchUserInModal();
+        this.loading= false
+      }, 500); // delay for half second
+    },
     closeModal() {
       this.$emit('closeModal')
     },
@@ -91,6 +103,7 @@ this.$emit('addchat')
       const querySnapshot = await getDocs(q);
       if (querySnapshot.empty === true) {
         this.docsIsEmpty = true;
+        this.docs = []
       } else {
         querySnapshot.forEach((doc) => {
           this.docsIsPopulated = true;
