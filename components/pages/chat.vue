@@ -1,9 +1,7 @@
 <template>
   <div class="flex w-full relative h-full body">
     <div v-if="shoeChatSearchModal">
-      <RegisterTwo :logo="true" :close="true" @closeModal="closeModal" class="w-full">
-      <message-search @search-event ="searchfromSearchbar()"/>
-      </RegisterTwo>
+      <message-search @addchat ="addchat()" @closeModal="closeModal"/>
     </div>
     <div
       class="xs:w-2/5 w-full border-x min-h-screen h-full xs:px-0 px-4"
@@ -185,7 +183,11 @@ messageSearch
     };
   },
   methods: {
+    addchat(){
+      this.showChat(this.$store.state.newChatId)
+      this.shoeChatSearchModal = false;
 
+    },
     closeModal() {
       this.shoeChatSearchModal = false;
     },

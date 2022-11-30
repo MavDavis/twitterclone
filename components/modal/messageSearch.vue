@@ -1,4 +1,6 @@
 <template>
+  
+ <RegisterTwo :logo="true" :close="true" @closeModal="closeModal" class="w-full">
   <div class="w-full flex justify-center items-center flex-col relative">
     <div class="search-bar flex justify-center items-center w-full">
       <div class="relative w-full border-b-2">
@@ -50,6 +52,8 @@
       <p class="text-lg">This Username does not exist</p>
     </div>
   </div>
+</RegisterTwo>
+
 </template>
 
 <script>
@@ -68,8 +72,12 @@ export default {
     };
   },
   methods: {
+    closeModal() {
+      this.$emit('closeModal')
+    },
     addChat() {
       this.$store.commit("addChat", dok);
+this.$emit('addchat')
     },
     async searchUserInModal() {
       const q = query(

@@ -27,6 +27,7 @@ import {
 } from "firebase/firestore";
 export const state = () => ({
   theme: true,
+  newChatId:null,
   sidebarSide: false,
   loggedIn: false,
   userProfile: {
@@ -340,17 +341,27 @@ export const mutations = {
     }
   },
   addChat(state, payload){
+state.newChatId = payload.id
    let chats = (state.userProfile.chats); 
    chats = [...chats,   {
     Fullname: payload.Fullname,
     Username: payload.Username,
     userId: payload.id,
-    message: [],
-    img:payload.img,
+    message: [
+      // { userId: 0, message: "hy", time: "02-sept,2022" },
+      // {
+      //   userId: 0,
+      //   message: "Good day. How are you doing?",
+      //   time: "02-sept,2022",
+      // },
+    
+    ],
+    img:payload.profileImage
+    ,
   },]
   let user = state.userProfile
-//  state.userProfile = {...user, chats};
+ state.userProfile = {...user, chats};
 
-console.log(state.userProfile, chats);
+console.log(state.userProfile);
   }
 };
