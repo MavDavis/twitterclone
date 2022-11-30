@@ -30,7 +30,8 @@
         Next
       </button>
     </div>
-    <div v-if="docsIsPopulated" class="w-full relative">
+ <div class="w-full" v-if="keydownDone">
+  <div v-if="docsIsPopulated" class="w-full relative">
       <div v-for="item in docs" :key="item.id" class="w-full relative">
         <div
           class="flex w-full items-center px-4 py-2 hover:bg-slate-200 cursor-pointer mt-4 relative"
@@ -48,9 +49,10 @@
         </div>
       </div>
     </div>
-    <div v-if="docsIsEmpty" class="w-full">
+    <div v-else class="w-full">
       <p class="text-lg">This Username does not exist</p>
     </div>
+ </div>
   </div>
 </RegisterTwo>
 
@@ -66,6 +68,7 @@ export default {
     return {
       search: "",
       docs: [],
+      keydownDone:false,
       docsIsPopulated: false,
       nextActive: false,
       docsIsEmpty: false,
@@ -100,6 +103,8 @@ this.$emit('addchat')
           }
         });
       }
+      this.keydownDone = true
+
     },
   },
 };

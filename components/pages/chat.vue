@@ -54,8 +54,8 @@
                {{ msg.message[msg.message.length - 1].time }}
              </p>
            </div>
-           <p class="text-sm">
-             <span v-if="msg.message[msg.message.length - 1].userId != 1">
+           <p class="text-sm" v-if="msg.message.length">
+             <span v-if="msg.message[msg.message.length - 1].userId != $store.state.userProfile.id">
                {{ msg.name }} sent
              </span>
              <span v-else>You sent </span>
@@ -85,7 +85,7 @@
 
       <div
         class="p-4 flex flex-col min-h-screen h-fit w-full relative"
-        v-if="messages.length > 0"
+        v-if="!noMessages"
       >
         <div
           class="flex flex-col items-center py-4 relative m-2 justify-center w-full border-b"
@@ -176,6 +176,7 @@ messageSearch
       chat: [],
       messages: [],
       user: null,
+      noMessages:true,
       showchatMessages: null,
       showchatUsers: null,
       newMessage: "",
@@ -197,6 +198,7 @@ messageSearch
     },
     
     showChat(id) {
+      this.noMessages = false
       this.chat = this.$store.state.userProfile.chats;
 
       if (window.innerWidth < 614) {
@@ -224,7 +226,7 @@ this.user = {
     sendMessage() {
       if (this.newMessage.length > 0) {
         this.messages.push({
-          userId: 1,
+          userId: this.$store.state.userProfile.id,
           message: this.newMessage,
           time: "02 september 2022", // get new time
         });
