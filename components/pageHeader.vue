@@ -4,7 +4,7 @@
       >
 <div class="flex justify-center items-center w-fit">
   <div  @click="$store.commit('toggleSidebar')" v-if="$store.state.loggedIn" class="justify-center  items-center flex img w-12 h-12 rounded-full bg-dim-500 xxs:hidden mr-2">
-    <img class=" relative" src="" alt="">
+    <img class=" relative w-full h-full rounded-full" :src="$store.state.userProfile.profileImage" alt="">
   </div>
   <p class="text-xl font-bold ">{{name}}</p>
 

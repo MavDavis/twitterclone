@@ -43,7 +43,7 @@
       <div
         class="justify-center items-center flex img w-12 h-12 rounded-full bg-dim-500 xs:mr-2"
       >
-        <img class="relative" src="" alt="" />
+        <img v-if="$store.state.userProfile.profileImage.length" class="relative w-full h-full rounded-full" :src="$store.state.userProfile.profileImage" alt="" />
       </div>
       <div class="lg:flex flex-col items-center hidden">
         <p class="text-sm font-semibold">{{$store.state.userProfile.Fullname}}</p>

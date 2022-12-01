@@ -188,7 +188,7 @@ export const mutations = {
               },
             ],
 
-            profileImage: "",
+            profileImage: user.photoURL,
             about: "",
             link: "",
             tweets: "",
@@ -228,6 +228,7 @@ export const mutations = {
       })
       .then(() => {
         let user = res.user;
+        console.log(user);
        let str =  user.displayName.trim().split(/\s+/);
         setDoc(doc(db, "User", user.uid.toString()), {
           Email: user.email,
@@ -287,7 +288,7 @@ export const mutations = {
             },
           ],
 
-          profileImage: "",
+          profileImage:user.photoURL,
           about: "",
           link: "",
           tweets: "",

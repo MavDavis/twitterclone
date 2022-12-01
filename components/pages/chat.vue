@@ -38,7 +38,7 @@
          <div
            class="justify-center items-center flex img w-8 h-8 rounded-full bg-dim-900 mr-2"
          >
-           <img class="relative" :src="msg.img" alt="" />
+           <img v-if="msg.img.length" class="relative w-full h-full rounded-full" :src="msg.img" alt="" />
          </div>
          <div class="flex w-full relative flex-col">
            <div class="flex w-full relative items-center">
@@ -93,7 +93,7 @@
           <div
             class="justify-center items-center flex img w-8 h-8 rounded-full bg-dim-500 ml-2"
           >
-            <img class="relative" src="" alt="" />
+            <img v-if="user.img.length" class="relative w-full h-full rounded-full" :src="user.img" alt="" />
           </div>
           <p>{{ user.Fullname }}</p>
           <p>@{{ user.Username }}</p>
@@ -209,8 +209,8 @@ messageSearch
         this.showchatUsers = true;
       }
       let msg = this.chat.find((item) => item.userId == id);
+      console.log(msg);
       this.messages = msg.message;
-
 this.user = {
         userId: msg.userId,
         Fullname: msg.Fullname,

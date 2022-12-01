@@ -8,7 +8,7 @@
           <div
             class="justify-center items-center flex img w-12 h-12 rounded-full bg-dim-500 mr-2"
           >
-            <img class="relative" src="" alt="" />
+            <img v-if="$store.state.userProfile.profileImage.length" class="relative rounded-full h-full w-full" :src="$store.state.userProfile.profileImage" alt="" />
           </div>
           <p class="text-lg font-semibold ml-0">What's happening?</p>
         </div>

@@ -8,9 +8,10 @@
       <div class="relative w-full h-fit">
         <div class="h-40 w-full bg-slate-200 relative"></div>
         <div class="profile-pic bg-slate-200">
-          <img src="" alt="" />
+          <img v-if="$store.state.userProfile.profileImage.length" class="relative w-full h-full rounded-full"  :src="$store.state.userProfile.profileImage" alt="" />
           <div class="hover"></div>
         </div>
+        
         <button
           class="editProfile font-semibold text-xs hover:bg-slate-200 border rounded-full px-2 py-1"
         >
