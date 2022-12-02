@@ -5,7 +5,7 @@ export default {
   head: {
     title: 'twitter',
     script:[
-      {src:"https://kit.fontawesome.com/87e2f7b4fa.js",
+      {src:"https://kit.fontawesome.com/ef9a692198.js",
     crossorigin:"anonymous"
     },
     ],

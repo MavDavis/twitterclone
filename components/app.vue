@@ -77,10 +77,10 @@ export default {
       loading:true,
       IWantToTweet: false,
       links: [
-        { icon: "fas  fa-house", name: "Home", params: "index" },
-        { icon: "fa-solid fa-search", name: "Explore" },
-        { icon: "fa-regular fa-bell", name: "Notification" },
-        { icon: "fa-regular fa-envelope", name: "Messages", params: "chat" },
+        { icon: "fal  fa-house", name: "Home", params: "index" },
+        { icon: "fal fa-search", name: "Explore" },
+        { icon: "fal fa-bell", name: "Notification" },
+        { icon: "fal fa-envelope", name: "Messages", params: "chat" },
       ],
     };
   },

@@ -30,6 +30,7 @@ export const state = () => ({
   newChatId:null,
   sidebarSide: false,
   loggedIn: false,
+  IwantToTweet:false,
   userProfile: {
     name: "",
     age: "",
@@ -59,6 +60,9 @@ export const state = () => ({
 });
 
 export const mutations = {
+  toggleIwantToTweet(state){
+    state.IwantToTweet = !state.IwantToTweet;
+  },
   toggleTheme(state, payload) {
     state.theme = payload;
   },
@@ -130,7 +134,7 @@ export const mutations = {
           let str =  name.trim().split(/\s+/);
           setDoc(doc(db, "User", user.id.toString()), {
            Fullname: name,
-          Username : str[0],
+          Username : str[0].toLowerCase(),
 
             age: "",
             DOB: dob + mob + yob,
@@ -184,11 +188,10 @@ export const mutations = {
                   },
                   { userId: 2, message: "Okay", time: "02-sept,2022" },
                 ],
-                img: "",
               },
             ],
 
-            profileImage: user.photoURL,
+            profileImage: '',
             about: "",
             link: "",
             tweets: "",
@@ -356,6 +359,9 @@ state.newChatId = payload.id
   },]}
   let user = state.userProfile
  state.userProfile = {...user, chats};
-
+let username = state.userProfile.Username 
+username= username.slice(0,1).toUpperCase() + username.slice(1,username.length)
+console.log(username);
+state.userProfile.Username = username
   }
 };

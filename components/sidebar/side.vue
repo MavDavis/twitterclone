@@ -19,8 +19,7 @@
           <div
             class="justify-center items-center flex img w-12 h-12 rounded-full bg-dim-500"
           >
-            <img class="relative" src="" alt="" />
-          </div>
+          <img v-if="$store.state.userProfile.profileImage.length" class="relative w-full h-full rounded-full" :src="$store.state.userProfile.profileImage" alt="" />          </div>
         </div>
         <div
           class="border rounded-full w-8 h-8 flex items-center justify-center"
@@ -31,8 +30,8 @@
 
       <div class="w-full flex flex-col items-start py-4 px-4">
         <div @click="twoMethods()">
-          <p class="text-sm font-semibold">Username</p>
-          <p class="text-xs font-light">@nickname</p>
+          <p class="text-sm font-semibold">{{$store.state.userProfile.Fullname}}</p>
+          <p class="text-xs font-light">{{$store.state.userProfile.Username}}</p>
           <div class="mt-4 flex items-center justify-between">
             <p class="text-xs mr-4">
               <span class="font-semibold text-lg">0</span> follower
@@ -81,14 +80,14 @@ export default {
   data() {
     return {
       links: [
-        { icon: "fa-regular fa-user", name: "Profile", methods: "twoMethods" },
+        { icon: "far fa-user", name: "Profile", methods: "twoMethods" },
         {
-          icon: "fa-regular fa-bookmark",
+          icon: "far fa-bookmark",
           name: "Bookmark",
           methods: "twoMethods1",
         },
         {
-          icon: "fa-regular fa-rectangle-list",
+          icon: "far fa-list",
           name: "List",
           methods: "twoMethods2",
         },
