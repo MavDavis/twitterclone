@@ -25,6 +25,7 @@ import {
   query,
   orderBy,
   Timestamp,
+  updateDoc ,
   deleteDoc,
   where,
 } from "firebase/firestore";
@@ -67,8 +68,30 @@ photoFileName:'',
 });
 
 export const mutations = {
-  likeTweet(state, payload){
-    
+ async likeTweet(state, payload){
+  console.log(payload);
+    const like = doc(db, "tweets", payload);
+
+    const docSnap = await getDoc(like);
+  let newLike = docSnap.data().likes.find(item => item.id === state.userProfile.id)
+  if(newLike === undefined || newLike == null){
+    let obj = {name:state.userProfile.Fullname,
+      id:state.userProfile.id,
+      liked:true 
+      }
+    await updateDoc(
+  
+      like, {
+     likes:like.likes ?[...like.likes, obj]:[obj]
+    });
+  }else{
+    console.log(like);
+    await updateDoc(
+  
+      like, {
+     likes:like.likes.pop(obj)
+    });  }
+
   },
   ckeckfortweetMessage(state){
     if(state.tweetMessage.length > 0){

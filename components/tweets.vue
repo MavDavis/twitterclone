@@ -38,7 +38,7 @@
                   <i class="far fa-retweet"></i>
                   <span class="ml-1">{{ item.retweets }}</span>
                 </div>
-                <div class="flex items-center cursor-pointer">
+                <div class="flex items-center cursor-pointer" @click="like(item.id)">
                   <i class="far fa-heart"></i>
                   <span class="ml-1">{{ item.likes.length }}</span>
                 </div>
