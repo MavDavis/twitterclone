@@ -6,6 +6,8 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../firebase";
 
 const provider = new GoogleAuthProvider();
 
@@ -15,22 +17,26 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import {
   collection,
   getDoc,
-  getDocs,
+  addDoc,
+  onSnapshot,
   getFirestore,
   setDoc,
   doc,
   query,
   orderBy,
+  Timestamp,
   deleteDoc,
   where,
-  onSnapshot,
 } from "firebase/firestore";
 export const state = () => ({
   theme: true,
-  newChatId:null,
+  newChatId: null,
+  photoTweetFileUrl:'',
+photoFileName:'',
   sidebarSide: false,
   loggedIn: false,
-  IwantToTweet:false,
+  IwantToTweet: false,
+  youCanTweet:false,
   userProfile: {
     name: "",
     age: "",
@@ -52,6 +58,7 @@ export const state = () => ({
 
     likedTweets: "",
   },
+  tweetMessage: "",
   addedDetails: false,
   tweets: [],
   loading: false,
@@ -60,7 +67,55 @@ export const state = () => ({
 });
 
 export const mutations = {
-  toggleIwantToTweet(state){
+  likeTweet(state, payload){
+    
+  },
+  ckeckfortweetMessage(state){
+    if(state.tweetMessage.length > 0){
+      state.youCanTweet = true
+
+    }else if( state.photoTweetFileUrl != null || state.photoTweetFileUrl != ''){
+      state.youCanTweet = true
+
+    }else{
+      state.youCanTweet = false
+
+    }
+  },
+  filenameChanged(state, payload){
+    state.photoFileName = payload
+
+  },
+  createFileUrl(state, payload){
+    state.photoTweetFileUrl = payload
+    state.loading = true;
+    let user = state.userProfile;
+    if(state.tweetMessage.length > 0){
+      state.youCanTweet = true
+
+    }
+   else if(!!state.photoTweetFileUrl){
+      state.youCanTweet = true
+      const imgRef = ref(
+        storage,
+        `documents/${state.photoFileName}`
+      );
+
+      uploadBytes(imgRef, state.photoTweetFileUrl)
+      .then((snapshot) => {
+        console.log("Uploaded a blob or file!");})
+      .then(() => {
+  getDownloadURL(imgRef).then((downloadURL) => {
+    state.photoTweetFileUrl = (downloadURL);
+    state.loading= false })  
+  }).catch(err=>{
+    console.log(err);
+  })
+}else{
+  state.youCanTweet = false
+}
+  },
+  toggleIwantToTweet(state) {
     state.IwantToTweet = !state.IwantToTweet;
   },
   toggleTheme(state, payload) {
@@ -131,10 +186,10 @@ export const mutations = {
           state.loading = false;
         })
         .then(() => {
-          let str =  name.trim().split(/\s+/);
+          let str = name.trim().split(/\s+/);
           setDoc(doc(db, "User", user.id.toString()), {
-           Fullname: name,
-          Username : str[0].toLowerCase(),
+            Fullname: name,
+            Username: str[0].toLowerCase(),
 
             age: "",
             DOB: dob + mob + yob,
@@ -191,7 +246,7 @@ export const mutations = {
               },
             ],
 
-            profileImage: '',
+            profileImage: "",
             about: "",
             link: "",
             tweets: "",
@@ -232,12 +287,12 @@ export const mutations = {
       .then(() => {
         let user = res.user;
         console.log(user);
-       let str =  user.displayName.trim().split(/\s+/);
+        let str = user.displayName.trim().split(/\s+/);
         setDoc(doc(db, "User", user.uid.toString()), {
           Email: user.email,
           password: "",
           Fullname: user.displayName,
-          Username : str[0].toLowerCase(),
+          Username: str[0].toLowerCase(),
 
           DOB: "",
           followers: "",
@@ -291,7 +346,7 @@ export const mutations = {
             },
           ],
 
-          profileImage:user.photoURL,
+          profileImage: user.photoURL,
           about: "",
           link: "",
           tweets: "",
@@ -336,32 +391,88 @@ export const mutations = {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      let db = [];
       let user = docSnap.data();
+
       state.userProfile = user;
-      console.log(state.userProfile);
+      const colRef = collection(db, "tweets");
+const q  = query(colRef, orderBy('time'))
+      onSnapshot(q, (snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          let tweet = state.tweets;
+          let newTweet = tweet.find((item) => item.id === doc.id);
+          if (newTweet === undefined || newTweet === null) {
+            state.tweets.push({ ...doc.data(), id: doc.id });
+          }
+        });
+      });
+
+
     } else {
       console.log("No such document!");
     }
   },
-  addChat(state, payload){
-state.newChatId = payload.id
-   let chats = (state.userProfile.chats); 
-   let addingNewChat = chats.find(item => item.userId == payload.id)
-   if(addingNewChat == undefined || addingNewChat == null){
-   chats = [...chats,   {
-    Fullname: payload.Fullname,
-    Username: payload.Username,
-    userId: payload.id,
-    message: [  ],
-     img:payload.profileImage
-    ,
-  },]}
-  let user = state.userProfile
- state.userProfile = {...user, chats};
-let username = state.userProfile.Username 
-username= username.slice(0,1).toUpperCase() + username.slice(1,username.length)
-console.log(username);
-state.userProfile.Username = username
-  }
+  addChat(state, payload) {
+    state.newChatId = payload.id;
+    let chats = state.userProfile.chats;
+    let addingNewChat = chats.find((item) => item.userId == payload.id);
+    if (addingNewChat == undefined || addingNewChat == null) {
+      chats = [
+        ...chats,
+        {
+          Fullname: payload.Fullname,
+          Username: payload.Username,
+          userId: payload.id,
+          message: [],
+          img: payload.profileImage,
+        },
+      ];
+    }
+    let user = state.userProfile;
+    state.userProfile = { ...user, chats };
+    let username = state.userProfile.Username;
+    username =
+      username.slice(0, 1).toUpperCase() + username.slice(1, username.length);
+    console.log(username);
+    state.userProfile.Username = username;
+  },
+  TweetAMessage(state) {
+   
+    state.loading = true;
+    let user = state.userProfile;
+    let obj = {
+      Fullname: user.Fullname,
+      Username: user.Username,
+      id: user.id,
+      userImg: user.profileImage,
+      img:state.photoTweetFileUrl? state.photoTweetFileUrl : '',
+      tweets: state.tweetMessage,
+      likes: [],
+      retweets: 0,
+      comment: [],
+      time: Timestamp.fromDate(new Date()),
+    };
+    addDoc(collection(db, "tweets"), obj).catch((err) => {
+      state.loading = false;
+
+      console.log(err);
+    });
+    
+    const colRef = collection(db, "tweets");
+    const q  = query(colRef, orderBy('time', "desc"))
+
+    onSnapshot(q, (snapshot) => {
+      snapshot.docs.forEach((doc) => {
+        let tweet = state.tweets;
+        let newTweet = tweet.find((item) => item.id === doc.id);
+        if (newTweet === undefined || newTweet === null) {
+          state.tweets.push({ ...doc.data(), id: doc.id });
+        }
+      });
+      state.loading = false;
+      state.tweetMessage = ''
+      state.youCanTweet = false
+      state.IwantToTweet = false;
+      state.photoTweetFileUrl = ''
+    });
+  },
 };
