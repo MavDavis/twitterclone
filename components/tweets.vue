@@ -110,10 +110,14 @@
 
 <script>
 export default{
+  mounted(){
+    console.log(this.liked);
+  },
   computed:{
     tweets(){
       return this.$store.state.tweets
-    }
+    },
+
   },  watch: {
 
     },

@@ -25,19 +25,20 @@ import {
   query,
   orderBy,
   Timestamp,
-  updateDoc ,
+  updateDoc,
   deleteDoc,
   where,
 } from "firebase/firestore";
+import { async } from "@firebase/util";
 export const state = () => ({
   theme: true,
   newChatId: null,
-  photoTweetFileUrl:'',
-photoFileName:'',
+  photoTweetFileUrl: "",
+  photoFileName: "",
   sidebarSide: false,
   loggedIn: false,
   IwantToTweet: false,
-  youCanTweet:false,
+  youCanTweet: false,
   userProfile: {
     name: "",
     age: "",
@@ -68,91 +69,81 @@ photoFileName:'',
 });
 
 export const mutations = {
- async likeTweet(state, payload){
+  async likeTweet(state, payload) {
     const like = doc(db, "tweets", payload);
+    let stateTweet = state.tweets.find((item) => item.id === payload);
 
     const docSnap = await getDoc(like);
-  let newLike = docSnap.data().likes.find(item => item.id === state.userProfile.id)
-  if(newLike === undefined || newLike == null){
-    let obj = {name:state.userProfile.Fullname,
-      id:state.userProfile.id,
-      liked:true 
-      }
-    
-      if(docSnap.data().likes.length === 0){
-    await updateDoc(
-  
-      like, {
-     likes:[obj]
-    })
-    console.log(docSnap.data().likes);
-
-   }
-   //else{
-  //   await updateDoc(
-  
-  //     like, {
-  //    likes:[...like.likes,obj]
-  //   })
-  // }
- // }
-  }
- 
-  else{
-    let newObj =  docSnap.data().likes.filter(item => item.id !== newLike.id)
-    console.log(newObj,docSnap.data().likes);
-    // await updateDoc(
-  
-      like, {
-     likes:newObj
-  //  }); 
-   }
-  }
-  },
-  ckeckfortweetMessage(state){
-    if(state.tweetMessage.length > 0){
-      state.youCanTweet = true
-
-    }else if( state.photoTweetFileUrl != null || state.photoTweetFileUrl != ''){
-      state.youCanTweet = true
-
-    }else{
-      state.youCanTweet = false
-
+    let obj = {
+      name: state.userProfile.Fullname,
+      id: state.userProfile.id,
+      liked: true,
+    };
+    let newLike = docSnap
+      .data()
+      .likes.find((item) => item.id === state.userProfile.id);
+    if (newLike === undefined || newLike == null) {
+        await updateDoc(like, {
+          likes: [...docSnap.data().likes, obj],
+                });
+                let confirmStateTweetLiked = stateTweet.likes.find(item => item.id == obj.id)
+                if (newLike === confirmStateTweetLiked || confirmStateTweetLiked == null) {
+                  stateTweet.likes = [...stateTweet.likes, obj];
+                  state.tweets = [...state.tweets, stateTweet]
+                }
+        console.log(state.tweets, stateTweet);
+   
+    } else {
+      let newObj = docSnap
+        .data()
+        .likes.filter((item) => item.id !== newLike.id);
+        stateTweet.likes = stateTweet.likes.filter((item) => item.id !== obj.id);
+      await updateDoc(like, {
+        likes: newObj,
+      });
     }
   },
-  filenameChanged(state, payload){
-    state.photoFileName = payload
-
+  ckeckfortweetMessage(state) {
+    if (state.tweetMessage.length > 0) {
+      state.youCanTweet = true;
+    } else if (
+      state.photoTweetFileUrl != null ||
+      state.photoTweetFileUrl != ""
+    ) {
+      state.youCanTweet = true;
+    } else {
+      state.youCanTweet = false;
+    }
   },
-  createFileUrl(state, payload){
-    state.photoTweetFileUrl = payload
+  filenameChanged(state, payload) {
+    state.photoFileName = payload;
+  },
+  createFileUrl(state, payload) {
+    state.photoTweetFileUrl = payload;
     state.loading = true;
     let user = state.userProfile;
-    if(state.tweetMessage.length > 0){
-      state.youCanTweet = true
-
-    }
-   else if(!!state.photoTweetFileUrl){
-      state.youCanTweet = true
-      const imgRef = ref(
-        storage,
-        `documents/${state.photoFileName}`
-      );
+    if (state.tweetMessage.length > 0) {
+      state.youCanTweet = true;
+    } else if (!!state.photoTweetFileUrl) {
+      state.youCanTweet = true;
+      const imgRef = ref(storage, `documents/${state.photoFileName}`);
 
       uploadBytes(imgRef, state.photoTweetFileUrl)
-      .then((snapshot) => {
-        console.log("Uploaded a blob or file!");})
-      .then(() => {
-  getDownloadURL(imgRef).then((downloadURL) => {
-    state.photoTweetFileUrl = (downloadURL);
-    state.loading= false })  
-  }).catch(err=>{
-    console.log(err);
-  })
-}else{
-  state.youCanTweet = false
-}
+        .then((snapshot) => {
+          console.log("Uploaded a blob or file!");
+        })
+        .then(() => {
+          getDownloadURL(imgRef).then((downloadURL) => {
+            state.photoTweetFileUrl = downloadURL;
+            state.loading = false;
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      state.youCanTweet = false;
+    }
   },
   toggleIwantToTweet(state) {
     state.IwantToTweet = !state.IwantToTweet;
@@ -434,7 +425,7 @@ export const mutations = {
 
       state.userProfile = user;
       const colRef = collection(db, "tweets");
-const q  = query(colRef, orderBy('time', "desc"))
+      const q = query(colRef, orderBy("time", "desc"));
       onSnapshot(q, (snapshot) => {
         snapshot.docs.forEach((doc) => {
           let tweet = state.tweets;
@@ -444,8 +435,6 @@ const q  = query(colRef, orderBy('time', "desc"))
           }
         });
       });
-
-
     } else {
       console.log("No such document!");
     }
@@ -475,7 +464,6 @@ const q  = query(colRef, orderBy('time', "desc"))
     state.userProfile.Username = username;
   },
   TweetAMessage(state) {
-   
     state.loading = true;
     let user = state.userProfile;
     let obj = {
@@ -483,7 +471,7 @@ const q  = query(colRef, orderBy('time', "desc"))
       Username: user.Username,
       id: user.id,
       userImg: user.profileImage,
-      img:state.photoTweetFileUrl? state.photoTweetFileUrl : '',
+      img: state.photoTweetFileUrl ? state.photoTweetFileUrl : "",
       tweets: state.tweetMessage,
       likes: [],
       retweets: 0,
@@ -495,9 +483,9 @@ const q  = query(colRef, orderBy('time', "desc"))
 
       console.log(err);
     });
-    
+
     const colRef = collection(db, "tweets");
-    const q  = query(colRef, orderBy('time', "desc"))
+    const q = query(colRef, orderBy("time", "desc"));
 
     onSnapshot(q, (snapshot) => {
       snapshot.docs.forEach((doc) => {
@@ -508,10 +496,10 @@ const q  = query(colRef, orderBy('time', "desc"))
         }
       });
       state.loading = false;
-      state.tweetMessage = ''
-      state.youCanTweet = false
+      state.tweetMessage = "";
+      state.youCanTweet = false;
       state.IwantToTweet = false;
-      state.photoTweetFileUrl = ''
+      state.photoTweetFileUrl = "";
     });
   },
 };
