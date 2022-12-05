@@ -20,17 +20,17 @@
       </div>
 
       <!-- details -->
-      <div class="relative top-20 px-4">
-        <div class="my-4">
+      <div class="relative top-20 ">
+        <div class="my-4 px-4">
           <h3 class="text-xl font-bold">{{$store.state.userProfile.Fullname}}</h3>
           <p class="text-xs">@{{$store.state.userProfile.Username}}</p>
         </div>
         <!-- about -->
-        <p class="text-sm">
+        <p class="text-sm px-4">
           Software Engineer - JavaScript: Vue.js | Nuxt.js | Node.js
           http://github.com/MavDavis Music producer,
         </p>
-        <div class="flex flex-wrap">
+        <div class="flex flex-wrap px-4">
           <p class="flex items-center mr-2 text-sm cursor-pointer">
             <i class="fas fa-location-dot"></i><span>{{ user.location }}</span>
           </p>
@@ -47,11 +47,11 @@
             <i class="fas fa-location-dot"></i><span>{{ user.join }}</span>
           </p>
         </div>
-        <div class="flex mt-2">
+        <div class="flex mt-2 px-4">
           <p class="mr-2 text-sm">{{ user.followers }} followers</p>
           <p class="text-sm">{{ user.following }} following</p>
         </div>
-        <div class="w-full flex justify-between mt-2">
+        <div class="w-full flex justify-between mt-2 px-4">
           <p @click="count()" class="hover:bg-slate-200 p-2 cursor-pointer">
             Tweets
           </p>

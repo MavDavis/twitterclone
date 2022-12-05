@@ -34,6 +34,7 @@ export const state = () => ({
   theme: true,
   newChatId: null,
   photoTweetFileUrl: "",
+  whoToFollow:[],
   photoFileName: "",
   sidebarSide: false,
   loggedIn: false,
@@ -69,6 +70,25 @@ export const state = () => ({
 });
 
 export const mutations = {
+   async follow(state, payload){
+  
+        const follow = doc(db, 'User', payload)
+const followDocSnap = await getDoc(follow)
+let newFollower = followDocSnap.data().followers.find(person => person.id ===  state.userProfile.id)
+if(!newFollower){
+let data = followDocSnap.data().followers;
+    await updateDoc(follow, {
+        followers: [...data, state.userProfile],
+      });
+      console.log('following');
+}else{
+    let data = followDocSnap.data().followers;
+let newData = data.filter(person => person.id !==  state.userProfile.id)
+ await updateDoc(follow, {
+        followers: newData,
+      });
+      console.log('unFollowed');}
+    },
   async likeTweet(state, payload) {
     const like = doc(db, "tweets", payload);
     let stateTweet = state.tweets.find((item) => item.id === payload);
@@ -433,6 +453,15 @@ export const mutations = {
           if (newTweet === undefined || newTweet === null) {
             state.tweets.push({ ...doc.data(), id: doc.id });
           }
+        });
+      });
+      const secondColRef = collection(db, 'User')
+      onSnapshot(secondColRef, (snapshot) => {
+        snapshot.docs.forEach((doc) => {
+       let checkFortheExistenceOfUser =    state.whoToFollow.find(item => item.id === doc.id)
+       if(!checkFortheExistenceOfUser){
+        state.whoToFollow.push(doc.data())}
+        state.whoToFollow =   state.whoToFollow.filter(item => item.id !== state.userProfile.id)
         });
       });
     } else {

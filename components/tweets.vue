@@ -1,6 +1,6 @@
 <template>
-  <section class="w-full h-full">
-    <ul class="flex w-full flex-col">
+  <section class="w-full h-full relative">
+    <ul class="flex w-full flex-col relative">
       <li
         class="border-b w-full relative"
         v-for="(item, ind) in tweets"
@@ -110,9 +110,7 @@
 
 <script>
 export default{
-  mounted(){
-    console.log(this.liked);
-  },
+
   computed:{
     tweets(){
       return this.$store.state.tweets
@@ -135,7 +133,10 @@ export default{
   width: calc(100% - 4rem);
   padding-right: 16px;
 }
-svg {
+svg, i {
+  display:flex;
+  align-items:center;
+  justify-content: center;
   --tw-text-opacity: 1;
   font-size: 1.125rem /* 18px */;
   line-height: 1.75rem;
@@ -148,6 +149,7 @@ svg {
     background: rgb(179 233 225 / var(--tw-text-opacity));
     cursor: pointer;
     fill: rgb(29 155 240);
+    color: rgb(29 155 240);
   }
 }
 </style>
