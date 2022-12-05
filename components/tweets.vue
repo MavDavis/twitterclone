@@ -112,7 +112,7 @@
 export default{
   computed:{
     tweets(){
-      return this.$store.state.tweets.reverse()
+      return this.$store.state.tweets
     }
   },  watch: {
 

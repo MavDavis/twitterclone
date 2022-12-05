@@ -33,7 +33,7 @@
         </div>
       </div>
       <div class="p-4 ml-12">
-        <img v-if="$store.state.photoTweetFileUrl" :src="$store.state.photoTweetFileUrl" alt="">
+        <img class="tweetingImg" v-if="$store.state.photoTweetFileUrl" :src="$store.state.photoTweetFileUrl" alt="">
         <textarea
           class="w-full mt-4 focus:outline-none active:outline-none active:border-none focus:ring-0 focus:ring-dim-100"
           rows="4"
@@ -185,11 +185,18 @@ svg {
 .width {
   width: 100%;
   max-width: 614px;
+  overflow-y: scroll;
   margin-left: auto;
   margin-right: auto;
   height: fit-content;
 }
 .inputTag {
   display: none;
+}
+.tweetingImg{
+  max-width:100%;
+  position:relative;
+  object-fit: contain;
+  max-height:200px;
 }
 </style>

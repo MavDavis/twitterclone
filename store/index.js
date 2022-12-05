@@ -69,7 +69,6 @@ photoFileName:'',
 
 export const mutations = {
  async likeTweet(state, payload){
-  console.log(payload);
     const like = doc(db, "tweets", payload);
 
     const docSnap = await getDoc(like);
@@ -79,19 +78,36 @@ export const mutations = {
       id:state.userProfile.id,
       liked:true 
       }
+    
+      if(docSnap.data().likes.length === 0){
     await updateDoc(
   
       like, {
-     likes:like.likes ?[...like.likes, obj]:[obj]
-    });
-  }else{
-    console.log(like);
-    await updateDoc(
-  
-      like, {
-     likes:like.likes.pop(obj)
-    });  }
+     likes:[obj]
+    })
+    console.log(docSnap.data().likes);
 
+   }
+   //else{
+  //   await updateDoc(
+  
+  //     like, {
+  //    likes:[...like.likes,obj]
+  //   })
+  // }
+ // }
+  }
+ 
+  else{
+    let newObj =  docSnap.data().likes.filter(item => item.id !== newLike.id)
+    console.log(newObj,docSnap.data().likes);
+    // await updateDoc(
+  
+      like, {
+     likes:newObj
+  //  }); 
+   }
+  }
   },
   ckeckfortweetMessage(state){
     if(state.tweetMessage.length > 0){
@@ -418,7 +434,7 @@ export const mutations = {
 
       state.userProfile = user;
       const colRef = collection(db, "tweets");
-const q  = query(colRef, orderBy('time'))
+const q  = query(colRef, orderBy('time', "desc"))
       onSnapshot(q, (snapshot) => {
         snapshot.docs.forEach((doc) => {
           let tweet = state.tweets;
