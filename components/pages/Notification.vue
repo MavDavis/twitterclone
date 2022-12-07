@@ -48,7 +48,7 @@
             v-if="item.reply == true"
           >
             <div
-              class="justify-center items-center flex img w-20 h-12 rounded-full bg-dim-900 mr-2"
+              class="justify-center items-center flex img w-20 xs:h-10  h-8 rounded-full bg-dim-900 mr-2"
             >
               <img class="relative" :src="item.img" alt="" />
             </div>
@@ -72,7 +72,7 @@
               <p class="text-sm">{{ item.tweet }}</p>
               <div class="flex justify-between w-5/6 pt-2">
                 <div class="flex items-center cursor-pointer">
-                  <i class="fa-regular fa-comment"></i>
+                  <i class="far fa-comment"></i>
                   <span class="ml-1">13</span>
                 </div>
                 <div class="flex items-center cursor-pointer">
@@ -80,14 +80,14 @@
                   <span class="ml-1">{{ item.retweets }}</span>
                 </div>
                 <div class="flex items-center cursor-pointer">
-                  <i class="fa-sharp fa-solid fa-arrow-down"></i>
+                  <i class="far fa-solid fa-arrow-down"></i>
                 </div>
                 <div class="flex items-center cursor-pointer">
-                  <i class="fa-regular fa-heart"></i>
+                  <i class="far fa-heart"></i>
                   <span class="ml-1">{{ item.likes }}</span>
                 </div>
                 <div class="flex items-center cursor-pointer">
-                  <i class="fa-sharp fa-solid fa-arrow-up-from-bracket"></i>
+                  <i class="far  fa-arrow-up-from-bracket"></i>
                 </div>
               </div>
             </div>
@@ -101,7 +101,7 @@
             <div class="flex items-center">
               <i class="fa-regular fa-heart"></i>
               <div
-                class="justify-center items-center flex img w-8 h-8 rounded-full bg-dim-500 ml-2"
+                class="justify-center items-center flex img w-8  h-8 rounded-full bg-dim-500 ml-2"
               >
                 <img class="relative" src="" alt="" />
               </div>

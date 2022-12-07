@@ -73,7 +73,6 @@ export default {
         { icon: " fa-bookmark", iconStart:'fal', name: "Bookmark" },
         { icon: " fa-list", iconStart:'fal', name: "List" },
         { icon: " fa-user", iconStart:'fal', name: "Profile" },
-        // {icon:'', name:'More'},
       ],
     };
   },
