@@ -12,13 +12,21 @@
       </div>
     </div>
     <!-- Right Sidebar -->
-    <div class="sm:w-2/5 w-1/6 hidden sm:block">
+    <div class="sm:w-2/5 w-1/6 hidden sm:block" @scroll="handleScroll()">
       <SidebarRight :gray="true" />
       <who-to-follow title="Who to follow"/>
     </div>
   </div>
 </template>
 
-<script setup></script>
-
+<script>
+export default{
+  methods: {
+    handleScroll: function(el) {
+      console.log(el);
+        if((el.srcElement.offsetHeight + el.srcElement.scrollTop) >= el.srcElement.scrollHeight) {
+console.log('hy');        }
+  }}
+}
+</script>
 <style></style>

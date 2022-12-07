@@ -39,7 +39,7 @@
                   <span class="ml-1">{{ item.retweets }}</span>
                 </div>
                 <div class="flex items-center cursor-pointer" @click="like(item.id)">
-                  <i class="far fa-heart"></i>
+                  <i class="far fa-heart" :class="[ item.likes.some(item => item.id === $store.state.userProfile.id) ? 'text-red-300 fas' : ' far ']"></i>
                   <span class="ml-1">{{ item.likes.length }}</span>
                 </div>
                 <div class="flex items-center cursor-pointer">
@@ -82,7 +82,7 @@
                   <span class="ml-1">{{ item.retweets }}</span>
                 </div>
                 <div class="flex items-center cursor-pointer" @click="like(item.id)">
-                  <i class="far fa-heart"></i>
+                  <i class=" fa-heart" :class="[ item.likes.some(item => item.id === $store.state.userProfile.id) ? 'text-red-300 fas' : ' far']" ></i>
                   <span class="ml-1">{{ item.likes.length }}</span>
                 </div>
                 <div class="flex items-center cursor-pointer">

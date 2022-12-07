@@ -109,7 +109,6 @@ let newData = data.filter(person => person.id !==  state.userProfile.id)
                 let confirmStateTweetLiked = stateTweet.likes.find(item => item.id == obj.id)
                 if (newLike === confirmStateTweetLiked || confirmStateTweetLiked == null) {
                   stateTweet.likes = [...stateTweet.likes, obj];
-                  state.tweets = [...state.tweets, stateTweet]
                 }
         console.log(state.tweets, stateTweet);
    

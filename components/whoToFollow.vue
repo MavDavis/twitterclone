@@ -22,7 +22,7 @@
       <button @click="follow(person.id)"
             class="flex items-center justify-center w-20 relative py-1 text-sm rounded-full my-1 hover:bg-dim-800 bg-dim-900 text-white"
           >
-            <span v-if ="person.followers">Follow</span>
+            <span v-if ="person.followers.some(item => item.id === $store.state.userProfile.id) ">Follow</span>
             <span v-else>Unfollow</span>
           </button>
     </div>
