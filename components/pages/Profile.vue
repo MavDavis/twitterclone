@@ -32,16 +32,16 @@
         </p>
         <div class="flex flex-wrap px-4">
           <p class="flex items-center mr-2 text-sm cursor-pointer">
-            <i class="fas fa-location-dot"></i><span>{{ user.location }}</span>
+            <i class="fas fa-location-dot"></i><span></span>
           </p>
           <p
             v-if="user.link"
             class="flex text-sm cursor-pointer items-center mr-2"
           >
-            <i class="fa-solid fa-link"></i><span>{{ user.link }}</span>
+            <i class="fa-solid fa-link"></i><span>{{ User.links }}</span>
           </p>
           <p class="flex items-center mr-2 text-sm cursor-pointer">
-            <i class="fas fa-balloons">b</i><span>{{ user.birthday }}</span>
+            <i class="fas fa-balloons">b</i><span>{{ User.age }}</span>
           </p>
           <p class="flex items-center mr-2 text-sm cursor-pointer">
             <i class="fas fa-location-dot"></i><span>{{ user.join }}</span>
@@ -74,10 +74,25 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
+<script>
+// import { ref } from "vue";
 
-const user = ref({
+// const user = ref({
+//   name: "User",
+//   location: "Abuja, Nigeria",
+//   link: "http://github.com/MavDavis",
+//   birthday: "03 March 2000",
+//   join: "03 September 2022",
+//   following: 65,
+//   followers: 19,
+// });
+export default{
+  mounted(){
+    console.log(this.User);
+  },
+  data(){
+    return{
+       user : {
   name: "User",
   location: "Abuja, Nigeria",
   link: "http://github.com/MavDavis",
@@ -85,7 +100,21 @@ const user = ref({
   join: "03 September 2022",
   following: 65,
   followers: 19,
-});
+    }
+  }
+},
+computed:{
+User(){
+  let { mob, yob, name, password, email, dob , followers,following, links, about, tweets, id} = this.$store.state.userProfile;
+  let age = (dob, mob, yob)
+  tweets = this.$store.state.tweets.filter(item => item.id === id)
+  following = this.$store.state.whoToFollow
+return{
+ name, password, email,followers,following, links, age, about, tweets,
+}
+}
+}
+}
 </script>
 
 <style scoped>

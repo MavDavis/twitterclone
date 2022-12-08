@@ -5,7 +5,7 @@
   <div class="flex w-full items-center flex-col">
     <div
       class="flex justify-between w-full items-center mb-3"
-      v-for="(person, ind) in this.$store.state.whoToFollow.slice(0,3)"
+      v-for="(person, ind) in this.sliced"
       :key="ind"
     >
     <div class="flex items-center">
@@ -22,13 +22,14 @@
       <button @click="follow(person.id)"
             class="flex items-center justify-center w-20 relative py-1 text-sm rounded-full my-1 hover:bg-dim-800 bg-dim-900 text-white"
           >
-            <span v-if ="person.followers.some(item => item.id === $store.state.userProfile.id) ">Follow</span>
-            <span v-else>Unfollow</span>
+            <span v-if ="person.followers.some(item => item.id === $store.state.userProfile.id)">Unfollow</span>
+            <span v-else>Follow</span>
           </button>
     </div>
 </div>
-<p class="flex cursor-pointer text-sm justify-start items-center text-dim-500">
-    Show more
+<p class="flex cursor-pointer text-sm justify-start items-center text-dim-500" @click="moreFollow">
+    <span v-if= "slicer">Show more</span>
+    <span v-else>Show less</span>
 </p>
   </div>
 </template>
@@ -37,13 +38,16 @@
 export default{
   data(){
 return{
-
+slicer:true,
 }
   },
   props:['title', 'white'],
 methods:{
   follow(id){
     this.$store.commit('follow', id)
+  },
+  moreFollow(){
+    this.slicer = !this.slicer
   }
 },
 computed:{
@@ -55,7 +59,15 @@ computed:{
     }else{
       return true
     }
-  }
+  },
+
+sliced(){
+if(this.slicer ){
+  return this.$store.state.whoToFollow.slice(0,3)
+}else{
+  return this.$store.state.whoToFollow
+}
+}
 }
 }
 </script>

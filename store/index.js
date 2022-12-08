@@ -34,7 +34,7 @@ export const state = () => ({
   theme: true,
   newChatId: null,
   photoTweetFileUrl: "",
-  whoToFollow:[],
+  whoToFollow: [],
   photoFileName: "",
   sidebarSide: false,
   loggedIn: false,
@@ -70,25 +70,48 @@ export const state = () => ({
 });
 
 export const mutations = {
-   async follow(state, payload){
-  
-        const follow = doc(db, 'User', payload)
-const followDocSnap = await getDoc(follow)
-let newFollower = followDocSnap.data().followers.find(person => person.id ===  state.userProfile.id)
-if(!newFollower){
-let data = followDocSnap.data().followers;
-    await updateDoc(follow, {
+  async follow(state, payload) {
+    const follow = doc(db, "User", payload);
+    const followDocSnap = await getDoc(follow);
+    const followingDoc = doc(db, "User", state.userProfile.id)
+    const followingDocSnap = await getDoc(followingDoc)
+    let newFollowing = followingDocSnap.data().following.find(person => payload === person.id);
+    if(!newFollowing){
+      await updateDoc(followingDoc, {
+        following: [...followingDocSnap.data().following,  followDocSnap
+          .data()],
+      });
+      state.userProfile.following = [...followingDocSnap.data().following,  followDocSnap
+        .data()]
+    }else{
+      let updatedFollowing = followingDocSnap.data().following.filter(person => person.id !== followDocSnap
+        .data().id)
+        await updateDoc(followingDoc, {
+          following: updatedFollowing
+        });
+        state.userProfile.following = updatedFollowing
+    }
+    let newFollower = followDocSnap
+      .data()
+      .followers.find((person) => person.id === state.userProfile.id);
+      let updateLocalFollower = state.whoToFollow.find(item  => item.id === payload)
+
+    if (!newFollower) {
+      let data = followDocSnap.data().followers;
+      await updateDoc(follow, {
         followers: [...data, state.userProfile],
       });
-      console.log('following');
-}else{
-    let data = followDocSnap.data().followers;
-let newData = data.filter(person => person.id !==  state.userProfile.id)
- await updateDoc(follow, {
+    // state.whoToFollow.followers = [...state.whoToFollow, updateLocalFollower]
+    updateLocalFollower.followers = [...updateLocalFollower.followers, state.userProfile]
+       } else {
+      let data = followDocSnap.data().followers;
+      let newData = data.filter((person) => person.id !== state.userProfile.id);
+    updateLocalFollower.followers = updateLocalFollower.followers.filter((person) => person.id !== state.userProfile.id);
+      await updateDoc(follow, {
         followers: newData,
       });
-      console.log('unFollowed');}
-    },
+    }
+  },
   async likeTweet(state, payload) {
     const like = doc(db, "tweets", payload);
     let stateTweet = state.tweets.find((item) => item.id === payload);
@@ -103,20 +126,24 @@ let newData = data.filter(person => person.id !==  state.userProfile.id)
       .data()
       .likes.find((item) => item.id === state.userProfile.id);
     if (newLike === undefined || newLike == null) {
-        await updateDoc(like, {
-          likes: [...docSnap.data().likes, obj],
-                });
-                let confirmStateTweetLiked = stateTweet.likes.find(item => item.id == obj.id)
-                if (newLike === confirmStateTweetLiked || confirmStateTweetLiked == null) {
-                  stateTweet.likes = [...stateTweet.likes, obj];
-                }
-        console.log(state.tweets, stateTweet);
-   
+      await updateDoc(like, {
+        likes: [...docSnap.data().likes, obj],
+      });
+      let confirmStateTweetLiked = stateTweet.likes.find(
+        (item) => item.id == obj.id
+      );
+      if (
+        newLike === confirmStateTweetLiked ||
+        confirmStateTweetLiked == null
+      ) {
+        stateTweet.likes = [...stateTweet.likes, obj];
+      }
+      console.log(state.tweets, stateTweet);
     } else {
       let newObj = docSnap
         .data()
         .likes.filter((item) => item.id !== newLike.id);
-        stateTweet.likes = stateTweet.likes.filter((item) => item.id !== obj.id);
+      stateTweet.likes = stateTweet.likes.filter((item) => item.id !== obj.id);
       await updateDoc(like, {
         likes: newObj,
       });
@@ -443,6 +470,7 @@ let newData = data.filter(person => person.id !==  state.userProfile.id)
       let user = docSnap.data();
 
       state.userProfile = user;
+      console.log(state.userProfile);
       const colRef = collection(db, "tweets");
       const q = query(colRef, orderBy("time", "desc"));
       onSnapshot(q, (snapshot) => {
@@ -454,13 +482,18 @@ let newData = data.filter(person => person.id !==  state.userProfile.id)
           }
         });
       });
-      const secondColRef = collection(db, 'User')
+      const secondColRef = collection(db, "User");
       onSnapshot(secondColRef, (snapshot) => {
         snapshot.docs.forEach((doc) => {
-       let checkFortheExistenceOfUser =    state.whoToFollow.find(item => item.id === doc.id)
-       if(!checkFortheExistenceOfUser){
-        state.whoToFollow.push(doc.data())}
-        state.whoToFollow =   state.whoToFollow.filter(item => item.id !== state.userProfile.id)
+          let checkFortheExistenceOfUser = state.whoToFollow.find(
+            (item) => item.id === doc.id
+          );
+          if (!checkFortheExistenceOfUser) {
+            state.whoToFollow.push(doc.data());
+          }
+          state.whoToFollow = state.whoToFollow.filter(
+            (item) => item.id !== state.userProfile.id
+          );
         });
       });
     } else {
