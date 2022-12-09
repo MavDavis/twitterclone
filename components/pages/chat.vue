@@ -185,7 +185,7 @@ messageSearch
   },
   methods: {
     addchat(){
-      this.showChat(this.$store.state.newChatId)
+      // this.showChat(this.$store.state.newChatId)
       this.shoeChatSearchModal = false;
 
     },

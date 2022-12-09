@@ -73,40 +73,51 @@ export const mutations = {
   async follow(state, payload) {
     const follow = doc(db, "User", payload);
     const followDocSnap = await getDoc(follow);
-    const followingDoc = doc(db, "User", state.userProfile.id)
-    const followingDocSnap = await getDoc(followingDoc)
-    let newFollowing = followingDocSnap.data().following.find(person => payload === person.id);
-    if(!newFollowing){
+    const followingDoc = doc(db, "User", state.userProfile.id);
+    const followingDocSnap = await getDoc(followingDoc);
+    let newFollowing = followingDocSnap
+      .data()
+      .following.find((person) => payload === person.id);
+    if (!newFollowing) {
       await updateDoc(followingDoc, {
-        following: [...followingDocSnap.data().following,  followDocSnap
-          .data()],
+        following: [...followingDocSnap.data().following, followDocSnap.data()],
       });
-      state.userProfile.following = [...followingDocSnap.data().following,  followDocSnap
-        .data()]
-    }else{
-      let updatedFollowing = followingDocSnap.data().following.filter(person => person.id !== followDocSnap
-        .data().id)
-        await updateDoc(followingDoc, {
-          following: updatedFollowing
-        });
-        state.userProfile.following = updatedFollowing
+      state.userProfile.following = [
+        ...followingDocSnap.data().following,
+        followDocSnap.data(),
+      ];
+    } else {
+      let updatedFollowing = followingDocSnap
+        .data()
+        .following.filter((person) => person.id !== followDocSnap.data().id);
+      await updateDoc(followingDoc, {
+        following: updatedFollowing,
+      });
+      state.userProfile.following = updatedFollowing;
     }
     let newFollower = followDocSnap
       .data()
       .followers.find((person) => person.id === state.userProfile.id);
-      let updateLocalFollower = state.whoToFollow.find(item  => item.id === payload)
+    let updateLocalFollower = state.whoToFollow.find(
+      (item) => item.id === payload
+    );
 
     if (!newFollower) {
       let data = followDocSnap.data().followers;
       await updateDoc(follow, {
         followers: [...data, state.userProfile],
       });
-    // state.whoToFollow.followers = [...state.whoToFollow, updateLocalFollower]
-    updateLocalFollower.followers = [...updateLocalFollower.followers, state.userProfile]
-       } else {
+      // state.whoToFollow.followers = [...state.whoToFollow, updateLocalFollower]
+      updateLocalFollower.followers = [
+        ...updateLocalFollower.followers,
+        state.userProfile,
+      ];
+    } else {
       let data = followDocSnap.data().followers;
       let newData = data.filter((person) => person.id !== state.userProfile.id);
-    updateLocalFollower.followers = updateLocalFollower.followers.filter((person) => person.id !== state.userProfile.id);
+      updateLocalFollower.followers = updateLocalFollower.followers.filter(
+        (person) => person.id !== state.userProfile.id
+      );
       await updateDoc(follow, {
         followers: newData,
       });
@@ -210,9 +221,7 @@ export const mutations = {
       )
         .then((userCredential) => {
           state.userProfile.id = userCredential.user.uid;
-          localStorage.setItem("userid", userCredential.user.uid);
           state.loading = false;
-          localStorage.setItem("Is-logged", false);
           state.loggedIn = true;
           this.app.router.push("/");
         })
@@ -272,9 +281,9 @@ export const mutations = {
 
             Email: email,
             password: password,
-            followers: "",
+            followers: [],
 
-            following: "",
+            following: [],
             id: user.id,
             chats: [
               {
@@ -371,9 +380,9 @@ export const mutations = {
           Username: str[0].toLowerCase(),
 
           DOB: "",
-          followers: "",
+          followers: [],
           age: "",
-          following: "",
+          following: [],
           id: user.uid,
           chats: [
             {
@@ -470,7 +479,10 @@ export const mutations = {
       let user = docSnap.data();
 
       state.userProfile = user;
-      console.log(state.userProfile);
+      let username = state.userProfile.Username;
+      username =
+        username.slice(0, 1).toUpperCase() + username.slice(1, username.length);
+      state.userProfile.Username = username;
       const colRef = collection(db, "tweets");
       const q = query(colRef, orderBy("time", "desc"));
       onSnapshot(q, (snapshot) => {
@@ -496,33 +508,58 @@ export const mutations = {
           );
         });
       });
+      const thirdColRef = collection(db, "Chats");
+      onSnapshot(thirdColRef, (snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          let name = state.userProfile.id;
+          const pattern = new RegExp(`${name}`);
+          if (pattern.test(doc.data().name)) {
+            // push chats to
+            // console.log(doc.data());
+          } else {
+          }
+          return;
+        });
+      });
     } else {
       console.log("No such document!");
     }
   },
   addChat(state, payload) {
-    state.newChatId = payload.id;
-    let chats = state.userProfile.chats;
-    let addingNewChat = chats.find((item) => item.userId == payload.id);
-    if (addingNewChat == undefined || addingNewChat == null) {
-      chats = [
-        ...chats,
+    let user = state.userProfile;
+    let chatName = (payload.id,user.id);
+    if(chatName === undefined || chatName == null){
+    setDoc(doc(db, "Chats", chatName), {
+      name: chatName,
+        chats : [
         {
           Fullname: payload.Fullname,
           Username: payload.Username,
           userId: payload.id,
-          message: [],
+          message: '',
           img: payload.profileImage,
-        },
-      ];
+        },]
+    }).then(()=>{
+        const thirdColRef = collection(db, "Chats");
+        onSnapshot(thirdColRef, (snapshot) => {
+          snapshot.docs.forEach((doc) => {
+            let name = state.userProfile.id;
+            const pattern = new RegExp(`${name}`);
+            if (pattern.test(doc.data().name)) {
+              let chats = state.userProfile.chats;
+              let addingNewChat = chats.find((item) => doc.data().name == item.name);
+              if (addingNewChat == undefined || addingNewChat == null) {
+                state.userProfile.chats.push()
+              }
+            } else {
+            }
+            return;
+          });
+        });
+      })
     }
-    let user = state.userProfile;
-    state.userProfile = { ...user, chats };
-    let username = state.userProfile.Username;
-    username =
-      username.slice(0, 1).toUpperCase() + username.slice(1, username.length);
-    console.log(username);
-    state.userProfile.Username = username;
+  
+   
   },
   TweetAMessage(state) {
     state.loading = true;

@@ -26,6 +26,7 @@
                   <span class="font-semibold">{{ item.Fullname }} </span
                   >{{ item.Username }} - 1hr
                 </p>
+
                 <i class="fas fa-ellipsis"></i>
               </div>
               <p class="text-sm">{{ item.tweets }}</p>
@@ -69,7 +70,7 @@
                 <i class="fa-solid fa-ellipsis"></i>
               </div>
               <div class="xs:h-96 h-36 rounded-lg my-2 rborder w-full">
-                <img v-if="item.img.length" class="w-full h-full relative object-cover" :src="item.img" alt="" />
+                <img v-if="item.img.length" class="w-full h-full relative object-fill" :src="item.img" alt="" />
               </div>
               <p class="text-sm">{{ item.tweets }}</p>
               <div class="flex w-5/6 justify-between pt-2">
