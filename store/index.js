@@ -123,6 +123,9 @@ export const mutations = {
       });
     }
   },
+  updateUser(state, payload) {
+    state.userProfile = payload;
+  },
   async likeTweet(state, payload) {
     const like = doc(db, "tweets", payload);
     let stateTweet = state.tweets.find((item) => item.id === payload);
@@ -291,16 +294,16 @@ export const mutations = {
                 Username: "Mavdavis",
                 userId: 0,
                 message: [
-                  { userId: 0, message: "hy", time: "02-sept,2022" },
+                  { userId: 0, message: "hy", time: new Date },
                   {
                     userId: 0,
                     message: "Good day. How are you doing?",
-                    time: "02-sept,2022",
+                    time: new Date,
                   },
                   {
                     userId: user.id,
                     message: "I am good and you?",
-                    time: "02-sept,2022",
+                    time: new Date,
                   },
                   {
                     userId: 0,
@@ -315,18 +318,18 @@ export const mutations = {
                 Username: "Adole",
                 userId: 2,
                 message: [
-                  { userId: 2, message: "hy", time: "02-sept,2022" },
+                  { userId: 2, message: "hy", time: new Date },
                   {
                     userId: 2,
                     message: "Do you have those papers ready?",
-                    time: "02-sept,2022",
+                    time: new Date,
                   },
                   {
                     userId: user.id,
                     message: "Not yet, It will be ready soon.",
-                    time: "02-sept,2022",
+                    time: new Date,
                   },
-                  { userId: 2, message: "Okay", time: "02-sept,2022" },
+                  { userId: 2, message: "Okay", time: new Date },
                 ],
               },
             ],
@@ -390,16 +393,16 @@ export const mutations = {
               Username: "Mavdavis",
               userId: 0,
               message: [
-                { userId: 0, message: "hy", time: "02-sept,2022" },
+                { userId: 0, message: "hy", time: new Date },
                 {
                   userId: 0,
                   message: "Good day. How are you doing?",
-                  time: "02-sept,2022",
+                  time: new Date,
                 },
                 {
                   userId: user.uid,
                   message: "I am good and you?",
-                  time: "02-sept,2022",
+                  time: new Date,
                 },
                 {
                   userId: 0,
@@ -414,18 +417,18 @@ export const mutations = {
               Username: "Adole",
               userId: 2,
               message: [
-                { userId: 2, message: "hy", time: "02-sept,2022" },
+                { userId: 2, message: "hy", time: new Date },
                 {
                   userId: 2,
                   message: "Do you have those papers ready?",
-                  time: "02-sept,2022",
+                  time: new Date,
                 },
                 {
                   userId: user.uid,
                   message: "Not yet, It will be ready soon.",
-                  time: "02-sept,2022",
+                  time: new Date,
                 },
-                { userId: 2, message: "Okay", time: "02-sept,2022" },
+                { userId: 2, message: "Okay", time: new Date },
               ],
               img: "",
             },
@@ -525,41 +528,60 @@ export const mutations = {
       console.log("No such document!");
     }
   },
-  addChat(state, payload) {
-    let user = state.userProfile;
-    let chatName = (payload.id,user.id);
-    if(chatName === undefined || chatName == null){
-    setDoc(doc(db, "Chats", chatName), {
-      name: chatName,
-        chats : [
-        {
-          Fullname: payload.Fullname,
-          Username: payload.Username,
-          userId: payload.id,
-          message: '',
-          img: payload.profileImage,
-        },]
-    }).then(()=>{
-        const thirdColRef = collection(db, "Chats");
-        onSnapshot(thirdColRef, (snapshot) => {
-          snapshot.docs.forEach((doc) => {
-            let name = state.userProfile.id;
-            const pattern = new RegExp(`${name}`);
-            if (pattern.test(doc.data().name)) {
-              let chats = state.userProfile.chats;
-              let addingNewChat = chats.find((item) => doc.data().name == item.name);
-              if (addingNewChat == undefined || addingNewChat == null) {
-                state.userProfile.chats.push()
-              }
-            } else {
-            }
-            return;
-          });
-        });
-      })
+  async addChat(state, payload) {
+    let myId = state.userProfile.id;
+    let myAccount = state.userProfile;
+    let myFriendId = payload.id;
+console.log(myAccount.id,payload.id);
+    const myFriend = doc(db, "User", myFriendId);
+    const fetchMyFiend = await getDoc(myFriend);
+    const Myself = doc(db, "User", myId);
+    const fetchMyself = await getDoc(Myself);
+    let checkIfIexistInMyfriendsChat = fetchMyFiend
+      .data()
+      .chats.find((item) => item.userId === myId);
+    if (!checkIfIexistInMyfriendsChat) {
+      await updateDoc(myFriend, {
+        chats: [
+          ...fetchMyFiend.data().chats,
+          {
+            Fullname: myAccount.Fullname,
+            Username: myAccount.Username,
+            userId: myAccount.id,
+            chatId: (`${myAccount.id}${payload.id}`),
+            message: [],
+            img: myAccount.profileImage,
+          },
+        ],
+      });
+      state.newChatId = myId;
+    } else {
+      state.newChatId = myId;
     }
-  
-   
+    let checkIfMyFrienExistInMyChat = fetchMyself
+      .data()
+      .chats.find((item) => item.userId === myFriendId);
+    if (!checkIfMyFrienExistInMyChat) {
+      await updateDoc(Myself, {
+        chats: [
+          ...fetchMyself.data().chats,
+          {
+            Fullname: payload.Fullname,
+            Username: payload.Username,
+            userId: payload.id,
+            chatId: (`${myAccount.id}${payload.id}`),
+            message: [],
+            img: payload.profileImage,
+          },
+        ],
+      });
+      state.newChatId = myFriendId;
+    } else {
+      state.newChatId = myFriendId;
+    }
+    onSnapshot(doc(db, "User", myId), (doc) => {
+      state.userProfile = doc.data();
+    });
   },
   TweetAMessage(state) {
     state.loading = true;
@@ -599,5 +621,38 @@ export const mutations = {
       state.IwantToTweet = false;
       state.photoTweetFileUrl = "";
     });
+  },
+  async sendMessage(state, payload) {
+    let myId = state.userProfile.id;
+    let myAccount = state.userProfile;
+    let myFriendId = payload.userId;
+
+  
+    let func = async (id) => {
+      const myFriend1 = doc(db, "User", id);
+      const fetchMyFiend1 = await getDoc(myFriend1);
+      let name = (`${myId}${myFriendId}`);
+      let name2 =(`${myFriendId}${myId}`);
+      const pattern = new RegExp(name);
+      const pattern2 = new RegExp(name2);
+      fetchMyFiend1.data().chats.forEach(item =>{
+   if ((pattern.test(`${item.chatId}`)) ) {
+console.log(item);
+   }
+  })
+    };
+   func(myId);
+   func(myFriendId);
+    // await updateDoc(myFriend1, {
+    //   chats: [...fetchMyFiend1.data().chats,   {
+    //     Fullname: myAccount.Fullname,
+    //     Username: myAccount.Username,
+    //     userId: myAccount.id,
+    //     message: [
+
+    //     ],
+    //     img: myAccount.profileImage,
+    //   },],
+    // })
   },
 };

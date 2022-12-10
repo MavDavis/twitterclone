@@ -1,7 +1,7 @@
 <template>
   <div class="flex w-full relative h-full body">
     <div v-if="shoeChatSearchModal">
-      <message-search @addchat ="addchat()" @closeModal="closeModal"/>
+      <message-search @addchat="addchat()" @closeModal="closeModal" />
     </div>
     <div
       class="xs:w-2/5 w-full border-x min-h-screen h-full xs:px-0 px-4"
@@ -29,42 +29,51 @@
         </div>
       </div>
       <div class="w-full" v-if="$store.state.userProfile.chats.length > 0">
-       <div
-         v-for="(msg, ind) in $store.state.userProfile.chats"
-         :key="ind"
-         @click="showChat(msg.userId)"
-         class="cursor-pointer flex w-full items-center hover:bg-slate-100 p-4"
-       >
-         <div
-           class="justify-center items-center flex img w-8 h-8 rounded-full bg-dim-900 mr-2"
-         >
-           <img v-if="msg.img.length" class="relative w-full h-full rounded-full" :src="msg.img" alt="" />
-         </div>
-         <div class="flex w-full relative flex-col">
-           <div class="flex w-full relative items-center">
-             <p class="text-sm font-semibold mr-2">
-               {{ msg.Fullname.slice(0, 8)}}
-               <span v-if="msg.Fullname.length > 8">...</span>
-             </p>
-             <p class="text-sm mr-auto">
-               @{{ msg.Username.slice(0, 8)
-               }}<span v-if="msg.Username.length > 8">...</span>
-             </p>
-             <p class="text-sm" v-if="msg.message.length">
-               {{ msg.message[msg.message.length - 1].time }}
-             </p>
-           </div>
-           <p class="text-sm" v-if="msg.message.length">
-             <span v-if="msg.message[msg.message.length - 1].userId != $store.state.userProfile.id">
-               {{ msg.name }} sent
-             </span>
-             <span v-else>You sent </span>
-             {{ msg.message[msg.message.length - 1].message }}
-           </p>
-         </div>
-       </div>
-     </div>
-    
+        <div
+          v-for="(msg, ind) in $store.state.userProfile.chats"
+          :key="ind"
+          @click="showChat(msg.userId)"
+          class="cursor-pointer flex w-full items-center hover:bg-slate-100 p-4"
+        >
+          <div
+            class="justify-center items-center flex img w-8 h-8 rounded-full bg-dim-900 mr-2"
+          >
+            <img
+              v-if="msg.img.length"
+              class="relative w-full h-full rounded-full"
+              :src="msg.img"
+              alt=""
+            />
+          </div>
+          <div class="flex w-full relative flex-col">
+            <div class="flex w-full relative items-center">
+              <p class="text-sm font-semibold mr-2">
+                {{ msg.Fullname.slice(0, 8) }}
+                <span v-if="msg.Fullname.length > 8">...</span>
+              </p>
+              <p class="text-sm mr-auto">
+                @{{ msg.Username.slice(0, 8)
+                }}<span v-if="msg.Username.length > 8">...</span>
+              </p>
+              <p class="text-sm" v-if="msg.message.length">
+                {{ msg.message[msg.message.length - 1].time }}
+              </p>
+            </div>
+            <p class="text-sm" v-if="msg.message.length">
+              <span
+                v-if="
+                  msg.message[msg.message.length - 1].userId !=
+                  $store.state.userProfile.id
+                "
+              >
+                {{ msg.Username }} sent
+              </span>
+              <span v-else>You sent </span>
+              {{ msg.message[msg.message.length - 1].message }}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- Right Sidebar -->
 
@@ -93,7 +102,12 @@
           <div
             class="justify-center items-center flex img w-8 h-8 rounded-full bg-dim-500 ml-2"
           >
-            <img v-if="user.img.length" class="relative w-full h-full rounded-full" :src="user.img" alt="" />
+            <img
+              v-if="user.img.length"
+              class="relative w-full h-full rounded-full"
+              :src="user.img"
+              alt=""
+            />
           </div>
           <p>{{ user.Fullname }}</p>
           <p>@{{ user.Username }}</p>
@@ -103,7 +117,9 @@
           v-for="(msg, ind) in messages"
           :key="ind"
           :class="[
-            msg.userId == $store.state.userProfile.id ? 'bg-dim-500 ml-auto' : 'bg-slate-200 mr-auto',
+            msg.userId == $store.state.userProfile.id
+              ? 'bg-dim-500 ml-auto'
+              : 'bg-slate-200 mr-auto',
           ]"
         >
           <p class="text-sm flex relative">{{ msg.message }}</p>
@@ -116,7 +132,7 @@
             class="absolute z-50 top-1 left-7 fa-solid fa-face-smile cursor-pointer text-sm text-dim-500 p-1 rounded-full hover:bg-dim-100"
           ></i>
           <input
-          @keyup.enter ="sendMessage"
+            @keyup.enter="sendMessage"
             v-model="newMessage"
             placeholder="Start a new message"
             class="relative block p-2 pl-16 w-full text-sm text-gray-900 rounded-full focus:outline-none active:outline-none active:border-dim-100 focus:ring-1 focus:ring-dim-100 bg-slate-200"
@@ -149,12 +165,13 @@
 </template>
 
 <script>
-import messageSearch from '../modal/messageSearch.vue'
-
+import messageSearch from "../modal/messageSearch.vue";
+import { onSnapshot, doc } from "firebase/firestore";
+import { db } from "../../firebase";
 
 export default {
-  components:{
-messageSearch
+  components: {
+    messageSearch,
   },
   created() {
     this.checkResize();
@@ -169,14 +186,13 @@ messageSearch
       this.showchatUsers = true;
     }
     this.chat = this.$store.state.userProfile.chats;
-
   },
   data() {
     return {
       chat: [],
       messages: [],
       user: null,
-      noMessages:true,
+      noMessages: true,
       showchatMessages: null,
       showchatUsers: null,
       newMessage: "",
@@ -184,10 +200,12 @@ messageSearch
     };
   },
   methods: {
-    addchat(){
-      // this.showChat(this.$store.state.newChatId)
+    addchat() {
+      onSnapshot(doc(db, "User", this.$store.state.userProfile.id), (doc) => {
+        this.$store.commit('updateUser', doc.data());
+      })
+      // this.showChat(this.$store.state.newChatId);
       this.shoeChatSearchModal = false;
-
     },
     closeModal() {
       this.shoeChatSearchModal = false;
@@ -196,9 +214,9 @@ messageSearch
     searchUser() {
       this.shoeChatSearchModal = true;
     },
-    
+
     showChat(id) {
-      this.noMessages = false
+      this.noMessages = false;
       this.chat = this.$store.state.userProfile.chats;
 
       if (window.innerWidth < 614) {
@@ -211,7 +229,7 @@ messageSearch
       let msg = this.chat.find((item) => item.userId == id);
       console.log(msg);
       this.messages = msg.message;
-this.user = {
+      this.user = {
         userId: msg.userId,
         Fullname: msg.Fullname,
         Username: msg.Username,
@@ -225,12 +243,14 @@ this.user = {
     },
     sendMessage() {
       if (this.newMessage.length > 0) {
-        this.messages.push({
+        let msgg = {
           userId: this.$store.state.userProfile.id,
           message: this.newMessage,
-          time: "02 september 2022", // get new time
-        });
+          time: new Date, // get new time
+        }
+        this.messages.push(msgg);
         this.newMessage = "";
+this.$store.commit('sendMessage', msgg)
       }
     },
     checkResize() {
