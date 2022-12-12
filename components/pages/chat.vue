@@ -247,12 +247,13 @@ export default {
           otherId: this.user.userId,
           userId: this.$store.state.userProfile.id,
           message: this.newMessage,
-          time: new Date, // get new time
+          time: new Date().toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) 
+
         }
         this.messages.push(msgg);
         this.$store.commit('sendMessage', msgg)
-        // this.newMessage = "";
       }
+      this.newMessage = "";
     },
     checkResize() {
       window.addEventListener("resize", () => {

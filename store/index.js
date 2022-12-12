@@ -261,7 +261,7 @@ export const mutations = {
   },
   async signup(state) {
     let user = state.userProfile;
-    let  userId = ''
+    let userId = "";
     const { mob, yob, name, password, email, dob } = user;
     var regex = /[^\s@]+@[^\s@]+\.[^\s@]+/;
     if (regex.test(user.email)) {
@@ -280,7 +280,7 @@ export const mutations = {
             Username: str[0].toLowerCase(),
 
             age: "",
-            DOB: (dob, mob,  yob),
+            DOB: (dob, mob, yob),
 
             Email: email,
             password: password,
@@ -301,7 +301,7 @@ export const mutations = {
                     time: "02-sept,2023",
                   },
                   {
-                    userId:userId,
+                    userId: userId,
                     message: "I am good and you?",
                     time: "02-sept,2023",
                   },
@@ -334,7 +334,6 @@ export const mutations = {
                 img: "",
               },
             ],
-  
 
             profileImage: "",
             about: "",
@@ -474,18 +473,18 @@ export const mutations = {
           email: "",
           password: "",
           followers: "",
-      
+
           following: "",
           id: null,
           chats: [],
-      
+
           profileImage: "",
           about: "",
           link: "",
           tweets: "",
-      
+
           likedTweets: "",
-        }
+        };
       })
       .catch((err) => {
         console.log(err);
@@ -505,6 +504,7 @@ export const mutations = {
       let user = docSnap.data();
 
       state.userProfile = user;
+
       let username = state.userProfile.Username;
       username =
         username.slice(0, 1).toUpperCase() + username.slice(1, username.length);
@@ -534,18 +534,8 @@ export const mutations = {
           );
         });
       });
-      const thirdColRef = collection(db, "Chats");
-      onSnapshot(thirdColRef, (snapshot) => {
-        snapshot.docs.forEach((doc) => {
-          let name = state.userProfile.id;
-          const pattern = new RegExp(`${name}`);
-          if (pattern.test(doc.data().name)) {
-            // push chats to
-            // console.log(doc.data());
-          } else {
-          }
-          return;
-        });
+      onSnapshot(docRef, (snapshot) => {
+        state.userProfile = (snapshot.data());
       });
     } else {
       console.log("No such document!");
@@ -570,7 +560,7 @@ export const mutations = {
             Fullname: myAccount.Fullname,
             Username: myAccount.Username,
             userId: myAccount.id,
-            chatId: (`${myAccount.id}${payload.id}`),
+            chatId: `${myAccount.id}${payload.id}`,
             message: [],
             img: myAccount.profileImage,
           },
@@ -591,7 +581,7 @@ export const mutations = {
             Fullname: payload.Fullname,
             Username: payload.Username,
             userId: payload.id,
-            chatId: (`${myAccount.id}${payload.id}`),
+            chatId: `${myAccount.id}${payload.id}`,
             message: [],
             img: payload.profileImage,
           },
@@ -649,26 +639,34 @@ export const mutations = {
     let myAccount = state.userProfile;
     let myFriendId = payload.otherId;
 
-  
     let func = async (id) => {
       const myFriend1 = doc(db, "User", id);
       const fetchMyFiend1 = await getDoc(myFriend1);
-      let name = (`${myId}${myFriendId}`);
-      let name2 =(`${myFriendId}${myId}`);
-      const pattern = new RegExp(name);
-      const pattern2 = new RegExp(name2);
-      fetchMyFiend1.data().chats.forEach((item, ind )=>{
-   if (item.chatId != undefined) {
-    if (item.chatId == name || item.chatId == name2) {
-      console.log(item);
-       updateDoc(myFriend1, {
-        chats:[...item.chats, payload] })
- }
-   }
-  })
+      let name = `${myId}${myFriendId}`;
+      let name2 = `${myFriendId}${myId}`;
+      // const pattern = new RegExp(name);
+      // const pattern2 = new RegExp(name2);
+      let aNewChatArray = [];  
+      fetchMyFiend1.data().chats.forEach((item, ind) => {
+        if (item.chatId != undefined) {
+          if (item.chatId == name || item.chatId == name2) {
+            let obj = {
+              otherId: payload.otherId,
+              userId: payload.userId,
+              message: payload.message,
+              time: Timestamp.fromDate(new Date()),
+            };
+            item.message.push(obj);
+
+          }
+        }           
+        aNewChatArray =[...aNewChatArray, item]
+ updateDoc(myFriend1, {
+              chats: aNewChatArray
+            });
+      });
     };
-   func(myId);
-   func(myFriendId);
-    
+    func(myId);
+    func(myFriendId);
   },
 };
