@@ -244,13 +244,14 @@ export default {
     sendMessage() {
       if (this.newMessage.length > 0) {
         let msgg = {
+          otherId: this.user.userId,
           userId: this.$store.state.userProfile.id,
           message: this.newMessage,
           time: new Date, // get new time
         }
         this.messages.push(msgg);
-        this.newMessage = "";
-this.$store.commit('sendMessage', msgg)
+        this.$store.commit('sendMessage', msgg)
+        // this.newMessage = "";
       }
     },
     checkResize() {

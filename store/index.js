@@ -261,7 +261,7 @@ export const mutations = {
   },
   async signup(state) {
     let user = state.userProfile;
-
+    let  userId = ''
     const { mob, yob, name, password, email, dob } = user;
     var regex = /[^\s@]+@[^\s@]+\.[^\s@]+/;
     if (regex.test(user.email)) {
@@ -269,41 +269,41 @@ export const mutations = {
       createUserWithEmailAndPassword(firebaseAuth, email, password)
         .then((userCredential) => {
           state.loggedIn = true;
-          user.id = userCredential.user.uid;
+          userId = userCredential.user.uid;
 
           state.loading = false;
         })
         .then(() => {
           let str = name.trim().split(/\s+/);
-          setDoc(doc(db, "User", user.id.toString()), {
+          setDoc(doc(db, "User", userId.toString()), {
             Fullname: name,
             Username: str[0].toLowerCase(),
 
             age: "",
-            DOB: dob + mob + yob,
+            DOB: (dob, mob,  yob),
 
             Email: email,
             password: password,
             followers: [],
 
             following: [],
-            id: user.id,
+            id: userId,
             chats: [
               {
                 Fullname: "Admin",
                 Username: "Mavdavis",
                 userId: 0,
                 message: [
-                  { userId: 0, message: "hy", time: new Date },
+                  { userId: 0, message: "hy", time: "02-sept,2023" },
                   {
                     userId: 0,
                     message: "Good day. How are you doing?",
-                    time: new Date,
+                    time: "02-sept,2023",
                   },
                   {
-                    userId: user.id,
+                    userId:userId,
                     message: "I am good and you?",
-                    time: new Date,
+                    time: "02-sept,2023",
                   },
                   {
                     userId: 0,
@@ -318,21 +318,23 @@ export const mutations = {
                 Username: "Adole",
                 userId: 2,
                 message: [
-                  { userId: 2, message: "hy", time: new Date },
+                  { userId: 2, message: "hy", time: "02-sept,2023" },
                   {
                     userId: 2,
                     message: "Do you have those papers ready?",
-                    time: new Date,
+                    time: "02-sept,2023",
                   },
                   {
-                    userId: user.id,
+                    userId: userId,
                     message: "Not yet, It will be ready soon.",
-                    time: new Date,
+                    time: "02-sept,2023",
                   },
-                  { userId: 2, message: "Okay", time: new Date },
+                  { userId: 2, message: "Okay", time: "02-sept,2023" },
                 ],
+                img: "",
               },
             ],
+  
 
             profileImage: "",
             about: "",
@@ -393,16 +395,16 @@ export const mutations = {
               Username: "Mavdavis",
               userId: 0,
               message: [
-                { userId: 0, message: "hy", time: new Date },
+                { userId: 0, message: "hy", time: "02-sept,2023" },
                 {
                   userId: 0,
                   message: "Good day. How are you doing?",
-                  time: new Date,
+                  time: "02-sept,2023",
                 },
                 {
                   userId: user.uid,
                   message: "I am good and you?",
-                  time: new Date,
+                  time: "02-sept,2023",
                 },
                 {
                   userId: 0,
@@ -417,18 +419,18 @@ export const mutations = {
               Username: "Adole",
               userId: 2,
               message: [
-                { userId: 2, message: "hy", time: new Date },
+                { userId: 2, message: "hy", time: "02-sept,2023" },
                 {
                   userId: 2,
                   message: "Do you have those papers ready?",
-                  time: new Date,
+                  time: "02-sept,2023",
                 },
                 {
                   userId: user.uid,
                   message: "Not yet, It will be ready soon.",
-                  time: new Date,
+                  time: "02-sept,2023",
                 },
-                { userId: 2, message: "Okay", time: new Date },
+                { userId: 2, message: "Okay", time: "02-sept,2023" },
               ],
               img: "",
             },
@@ -463,6 +465,27 @@ export const mutations = {
         console.log(firebaseAuth.currentUser);
         this.app.router.push("/Explore");
         state.loading = false;
+        state.userProfile = {
+          name: "",
+          age: "",
+          mob: "Month",
+          dob: "Date",
+          yob: "Year",
+          email: "",
+          password: "",
+          followers: "",
+      
+          following: "",
+          id: null,
+          chats: [],
+      
+          profileImage: "",
+          about: "",
+          link: "",
+          tweets: "",
+      
+          likedTweets: "",
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -532,7 +555,6 @@ export const mutations = {
     let myId = state.userProfile.id;
     let myAccount = state.userProfile;
     let myFriendId = payload.id;
-console.log(myAccount.id,payload.id);
     const myFriend = doc(db, "User", myFriendId);
     const fetchMyFiend = await getDoc(myFriend);
     const Myself = doc(db, "User", myId);
@@ -625,7 +647,7 @@ console.log(myAccount.id,payload.id);
   async sendMessage(state, payload) {
     let myId = state.userProfile.id;
     let myAccount = state.userProfile;
-    let myFriendId = payload.userId;
+    let myFriendId = payload.otherId;
 
   
     let func = async (id) => {
@@ -635,24 +657,18 @@ console.log(myAccount.id,payload.id);
       let name2 =(`${myFriendId}${myId}`);
       const pattern = new RegExp(name);
       const pattern2 = new RegExp(name2);
-      fetchMyFiend1.data().chats.forEach(item =>{
-   if ((pattern.test(`${item.chatId}`)) ) {
-console.log(item);
+      fetchMyFiend1.data().chats.forEach((item, ind )=>{
+   if (item.chatId != undefined) {
+    if (item.chatId == name || item.chatId == name2) {
+      console.log(item);
+       updateDoc(myFriend1, {
+        chats:[...item.chats, payload] })
+ }
    }
   })
     };
    func(myId);
    func(myFriendId);
-    // await updateDoc(myFriend1, {
-    //   chats: [...fetchMyFiend1.data().chats,   {
-    //     Fullname: myAccount.Fullname,
-    //     Username: myAccount.Username,
-    //     userId: myAccount.id,
-    //     message: [
-
-    //     ],
-    //     img: myAccount.profileImage,
-    //   },],
-    // })
+    
   },
 };
