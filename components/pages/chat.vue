@@ -56,7 +56,7 @@
                 }}<span v-if="msg.Username.length > 8">...</span>
               </p>
               <p class="text-sm" v-if="msg.message.length">
-                {{ msg.message[msg.message.length - 1].time }}
+                {{ date(msg.message[msg.message.length - 1].time)}}
               </p>
             </div>
             <p class="text-sm" v-if="msg.message.length">
@@ -187,6 +187,10 @@ export default {
     }
     this.chat = this.$store.state.userProfile.chats;
   },
+  created(){
+    this.chat = this.$store.state.userProfile.chats;
+
+  },
   data() {
     return {
       chat: [],
@@ -200,6 +204,14 @@ export default {
     };
   },
   methods: {
+    date(item){
+     if(item.seconds){
+       let time =  item.seconds * 1000;
+        return new Date(time).toLocaleDateString('en-us', { month:"short", day:"numeric", year:"numeric"});
+    }else{
+      return item
+    }
+  },
     addchat() {
       onSnapshot(doc(db, "User", this.$store.state.userProfile.id), (doc) => {
         this.$store.commit('updateUser', doc.data());

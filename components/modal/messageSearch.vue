@@ -33,7 +33,7 @@
  <div class="w-full" v-if="keydownDone">
   <linear-loading v-if="loading"/>
   <div v-if="docsIsPopulated" class="w-full relative">
-      <div v-for="item in docs" :key="item.id" class="w-full relative">
+      <div class="w-full relative">
         <div
           class="flex w-full items-center px-4 py-2 hover:bg-slate-200 cursor-pointer mt-4 relative"
           @click="nextActive = true"
@@ -41,11 +41,11 @@
           <div
             class="justify-center items-center flex img w-8 h-8 rounded-full bg-dim-900 mr-2"
           >
-            <img class="relative" :src="item.img" alt="" />
+            <img class="relative" :src="docs.img" alt="" />
           </div>
           <div class="flex flex-col justify-center">
-            <h3 class="text-xl font-bold">{{ item.Fullname }}</h3>
-            <p class="text-xs">@{{ item.Username }}</p>
+            <h3 class="text-xl font-bold">{{ docs.Fullname }}</h3>
+            <p class="text-xs">@{{ docs.Username }}</p>
           </div>
         </div>
       </div>
@@ -68,7 +68,7 @@ export default {
   data() {
     return {
       search: "",
-      docs: [],
+      docs: {},
       keydownDone:false,
       docsIsPopulated: false,
       nextActive: false,
@@ -103,17 +103,17 @@ this.$emit('addchat')
       const querySnapshot = await getDocs(q);
       if (querySnapshot.empty === true) {
         this.docsIsEmpty = true;
-        this.docs = []
+        this.docsIsPopulated = false
+
+        this.docs = {}
       } else {
         querySnapshot.forEach((doc) => {
           this.docsIsPopulated = true;
-          let res = this.docs.find((item) => item.id === doc.id);
-          if (res == undefined) {
+          this.docsIsEmpty = false;
+
             dok = doc.data();
-            this.docs = [...this.docs, dok];
-          } else {
-            return;
-          }
+            this.docs = dok;
+         
         });
       }
       this.keydownDone = true
