@@ -1,5 +1,5 @@
 <template>
-     <div class="search-bar flex justify-center items-center w-full">
+     <div class="search-bar flex justify-center items-center w-full mt-2">
       <div class="relative w-full">
         <div
           class="

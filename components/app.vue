@@ -110,11 +110,21 @@ export default {
       onAuthStateChanged(firebaseAuth, (user) => {
         if (user === undefined || user === null) {
           if (
-            this.$route.name.toLowerCase() !== "login" &&
-            this.$route.name.toLowerCase() !== "forgotPassword" &&
+            this.$route.name.toLowerCase() !== "login" ||
+            this.$route.name.toLowerCase() !== "forgotPassword" ||
             this.$route.name.toLowerCase() !== "signup"
           ) {
             this.$router.push("/Explore");
+          } else {
+            return
+          }
+        }else{
+          if (
+            this.$route.name.toLowerCase() === "login" ||
+            this.$route.name.toLowerCase() === "forgotPassword" ||
+            this.$route.name.toLowerCase() === "signup"
+          ) {
+            this.$router.push("/");
           } else {
             return
           }

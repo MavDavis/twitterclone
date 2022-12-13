@@ -297,42 +297,23 @@ export const mutations = {
                   { userId: 0, message: "hy", time: "02-sept,2023" },
                   {
                     userId: 0,
-                    message: "Good day. How are you doing?",
+                    message: "This is for test. Admin has no database",
                     time: "02-sept,2023",
                   },
                   {
                     userId: userId,
-                    message: "I am good and you?",
+                    message: "Click on the envelope icon",
                     time: "02-sept,2023",
                   },
                   {
                     userId: 0,
-                    message: "I am okay, thanks.",
+                    message: "Search for davids and senme a dm!",
                     time: "02-sept,2023",
                   },
                 ],
                 img: "",
               },
-              {
-                Fullname: "Admin2",
-                Username: "Adole",
-                userId: 2,
-                message: [
-                  { userId: 2, message: "hy", time: "02-sept,2023" },
-                  {
-                    userId: 2,
-                    message: "Do you have those papers ready?",
-                    time: "02-sept,2023",
-                  },
-                  {
-                    userId: userId,
-                    message: "Not yet, It will be ready soon.",
-                    time: "02-sept,2023",
-                  },
-                  { userId: 2, message: "Okay", time: "02-sept,2023" },
-                ],
-                img: "",
-              },
+            
             ],
 
             profileImage: "",
@@ -397,42 +378,23 @@ export const mutations = {
                 { userId: 0, message: "hy", time: "02-sept,2023" },
                 {
                   userId: 0,
-                  message: "Good day. How are you doing?",
+                  message: "This is for test. Admin has no database",
                   time: "02-sept,2023",
                 },
                 {
-                  userId: user.uid,
-                  message: "I am good and you?",
+                  userId: userId,
+                  message: "Click on the envelope icon",
                   time: "02-sept,2023",
                 },
                 {
                   userId: 0,
-                  message: "I am okay, thanks.",
+                  message: "Search for davids and senme a dm!",
                   time: "02-sept,2023",
                 },
               ],
               img: "",
             },
-            {
-              Fullname: "Admin2",
-              Username: "Adole",
-              userId: 2,
-              message: [
-                { userId: 2, message: "hy", time: "02-sept,2023" },
-                {
-                  userId: 2,
-                  message: "Do you have those papers ready?",
-                  time: "02-sept,2023",
-                },
-                {
-                  userId: user.uid,
-                  message: "Not yet, It will be ready soon.",
-                  time: "02-sept,2023",
-                },
-                { userId: 2, message: "Okay", time: "02-sept,2023" },
-              ],
-              img: "",
-            },
+          
           ],
 
           profileImage: user.photoURL,

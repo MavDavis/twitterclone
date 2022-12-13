@@ -52,7 +52,7 @@
         <p class="text-xs font-light">@{{$store.state.userProfile.Username}}</p>
       </div>
       <div class="icon ml-8 hidden lg:block">
-        <i class="fa-solid fa-ellipsis"></i>
+        <i class="fas fa-ellipsis"></i>
       </div>
     </div>
   </div>

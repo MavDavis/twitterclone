@@ -27,8 +27,7 @@
         </div>
         <!-- about -->
         <p class="text-sm px-4">
-          Software Engineer - JavaScript: Vue.js | Nuxt.js | Node.js
-          http://github.com/MavDavis Music producer,
+      {{User.about}}
         </p>
         <div class="flex flex-wrap px-4">
           <p class="flex items-center mr-2 text-sm cursor-pointer">
@@ -48,8 +47,8 @@
           </p>
         </div>
         <div class="flex mt-2 px-4">
-          <p class="mr-2 text-sm">{{ user.followers }} followers</p>
-          <p class="text-sm">{{ user.following }} following</p>
+          <p class="mr-2 text-sm">{{ User.followers.length }} followers</p>
+          <p class="text-sm">{{ User.following.length }} following</p>
         </div>
         <div class="w-full flex justify-between mt-2 px-4">
           <p @click="count()" class="hover:bg-slate-200 p-2 cursor-pointer">
@@ -98,8 +97,7 @@ export default{
   link: "http://github.com/MavDavis",
   birthday: "03 March 2000",
   join: "03 September 2022",
-  following: 65,
-  followers: 19,
+about:''
     }
   }
 },
