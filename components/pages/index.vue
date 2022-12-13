@@ -5,7 +5,7 @@
         <home-main />
       </div>
       <!-- Right Sidebar -->
-      <div class="sm:w-2/5 xs:w-1/6 w-0 hidden sm:block" >
+      <div class="sm:w-2/5 xs:w-1/6 w-0 hidden sm:block " >
         <SidebarRight :gray="true" />
         <who-to-follow title="Who to follow" />
       </div>

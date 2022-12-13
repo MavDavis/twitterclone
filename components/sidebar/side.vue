@@ -34,10 +34,10 @@
           <p class="text-xs font-light">{{$store.state.userProfile.Username}}</p>
           <div class="mt-4 flex items-center justify-between">
             <p class="text-xs mr-4">
-              <span class="font-semibold text-lg">0</span> follower
+              <span class="font-semibold text-lg">{{$store.state.userProfile.followers.length}}</span> follower
             </p>
             <p class="text-xs">
-              <span class="font-semibold text-lg">0</span> following
+              <span class="font-semibold text-lg">{{$store.state.userProfile.following.length}}</span> following
             </p>
           </div>
         </div>

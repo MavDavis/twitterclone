@@ -6,7 +6,7 @@
   <loading/>
 
 </div>    <!-- modal -->
-    <div class="h-72 bg-white width rounded-lg overflow-y-scroll">
+    <div class="xxs:h-96 py-4 h-full bg-white width xxs:rounded-lg overflow-y-scroll">
       <div class="flex justify-start items-center p-4">
         <i
           class="fas fa-times text-xl cursor-pointer"
@@ -188,7 +188,7 @@ svg {
   overflow-y: scroll;
   margin-left: auto;
   margin-right: auto;
-  height: fit-content;
+  min-height: fit-content;
 }
 .inputTag {
   display: none;
