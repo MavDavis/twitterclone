@@ -24,7 +24,7 @@
               <div class="flex justify-between w-full items-center">
                 <p class="text-sm">
                   <span class="font-semibold">{{ item.Fullname }} </span
-                  >{{ item.Username }} - 1hr
+                  >{{ item.Username }}  -{{new Date(item.time.seconds *1000).toLocaleDateString('en-us', { month:"short", day:"numeric", year:"numeric"})}}
                 </p>
 
                 <i class="fas fa-ellipsis"></i>
@@ -65,7 +65,7 @@
               <div class="flex justify-between w-full mb-1 items-center">
                 <p class="text-sm">
                   <span class="font-semibold">{{ item.Fullname }} </span
-                  >{{ item.Username }} - 1hr
+                  >{{ item.Username }} -{{new Date(item.time.seconds *1000).toLocaleDateString('en-us', { month:"short", day:"numeric", year:"numeric"})}}
                 </p>
                 <i class="fa-solid fa-ellipsis"></i>
               </div>

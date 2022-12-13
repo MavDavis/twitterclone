@@ -473,13 +473,17 @@ export const mutations = {
       state.userProfile.Username = username;
       const colRef = collection(db, "tweets");
       const q = query(colRef, orderBy("time", "desc"));
+
       onSnapshot(q, (snapshot) => {
+        state.tweets = [];
+
         snapshot.docs.forEach((doc) => {
-          let tweet = state.tweets;
-          let newTweet = tweet.find((item) => item.id === doc.id);
-          if (newTweet === undefined || newTweet === null) {
-            state.tweets.push({ ...doc.data(), id: doc.id });
-          }
+          state.tweets.push({ ...doc.data(), id: doc.id });
+
+          // let newTweet = tweet.find((item) => item.id === doc.id);
+          // if (newTweet === undefined || newTweet === null) {
+          //   state.tweets.push({ ...doc.data(), id: doc.id });
+          // }
         });
       });
       const secondColRef = collection(db, "User");
@@ -572,29 +576,20 @@ export const mutations = {
       comment: [],
       time: Timestamp.fromDate(new Date()),
     };
-    addDoc(collection(db, "tweets"), obj).catch((err) => {
+    addDoc(collection(db, "tweets"), obj)
+    .catch((err) => {
       state.loading = false;
 
       console.log(err);
     });
+    state.loading = false;
+    state.tweetMessage = "";
+    state.youCanTweet = false;
+    state.IwantToTweet = false;
+    state.photoTweetFileUrl = "";
+    
+    
 
-    const colRef = collection(db, "tweets");
-    const q = query(colRef, orderBy("time", "desc"));
-
-    onSnapshot(q, (snapshot) => {
-      snapshot.docs.forEach((doc) => {
-        let tweet = state.tweets;
-        let newTweet = tweet.find((item) => item.id === doc.id);
-        if (newTweet === undefined || newTweet === null) {
-          state.tweets.push({ ...doc.data(), id: doc.id });
-        }
-      });
-      state.loading = false;
-      state.tweetMessage = "";
-      state.youCanTweet = false;
-      state.IwantToTweet = false;
-      state.photoTweetFileUrl = "";
-    });
   },
   async sendMessage(state, payload) {
     let myId = state.userProfile.id;
