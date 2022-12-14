@@ -42,49 +42,53 @@
         </div>
       </div>
       <div v-if="mentionsActive">
-        <div class="" v-for="(item, index) in tweets" :key="index">
+        <div class="" v-for="(item, index) in $store.state.tweets" :key="index">
           <div
             class="px-4 py-2 flex w-full hover:bg-slate-100 cursor-pointer"
-            v-if="item.reply == true"
+            
           >
-            <div
-              class="justify-center items-center flex img w-20 xs:h-10  h-8 rounded-full bg-dim-900 mr-2"
+          <div
+              class="justify-center items-center flex img w-8 h-8 rounded-full bg-dim-100 mr-2"
             >
-              <img class="relative" :src="item.img" alt="" />
+              <img
+                class="relative w-full h-full rounded-full"
+                :src="item.userImg"
+                alt=""
+              />
             </div>
             <div>
-              <p class="text-xs font-semibold">{{ item.about }}</p>
+              <p class="text-xs font-semibold">Tweets</p>
               <div class="flex justify-between w-full items-center">
                 <p class="text-sm">
-                  <span class="font-semibold">{{ item.name }} </span> @{{
-                    item.nickname
+                  <span class="font-semibold">{{ item.Fullname }} </span> @{{
+                    item.Username
                   }}
-                  - {{ item.time }}
+                  - {{new Date(item.time.seconds *1000).toLocaleDateString('en-us', { month:"short", day:"numeric", year:"numeric"})}}
                 </p>
                 <i class="fa-solid fa-ellipsis"></i>
               </div>
               <p class="text-sm">
-                Replying to
+         Notifications for
                 <span class="cursor-pointer text-dim-500 hover:text-underline"
-                  >@username</span
+                  >@{{$store.state.userProfile.Username}}</span
                 >
               </p>
-              <p class="text-sm">{{ item.tweet }}</p>
+              <p v-if="item.tweets.length" class="text-sm">{{ item.tweets.slice(0,15) }}<span v-if="item.tweets.length > 15">...</span></p>
               <div class="flex justify-between w-5/6 pt-2">
                 <div class="flex items-center cursor-pointer">
                   <i class="far fa-comment"></i>
-                  <span class="ml-1">13</span>
+                  <span class="ml-1">0</span>
                 </div>
                 <div class="flex items-center cursor-pointer">
-                  <i class="fa-regular fa-retweet"></i>
-                  <span class="ml-1">{{ item.retweets }}</span>
+                  <i class="far fa-retweet"></i>
+                  <span class="ml-1">0</span>
                 </div>
                 <div class="flex items-center cursor-pointer">
                   <i class="far fa-solid fa-arrow-down"></i>
                 </div>
-                <div class="flex items-center cursor-pointer">
-                  <i class="far fa-heart"></i>
-                  <span class="ml-1">{{ item.likes }}</span>
+                <div class="flex items-center cursor-pointer" @click="like(item.id)">
+                  <i class=" fa-heart" :class="[ item.likes.some(item => item.id === $store.state.userProfile.id) ? 'text-dim-1000 fas' : ' far']" ></i>
+                  <span class="ml-1">{{ item.likes.length }}</span>
                 </div>
                 <div class="flex items-center cursor-pointer">
                   <i class="far  fa-arrow-up-from-bracket"></i>
@@ -95,7 +99,7 @@
         </div>
       </div>
       <div v-else>
-        <div class="p-4" v-for="(item, index) in tweets" :key="index">
+        <div class="p-4" v-for="(item, index) in $store.state.whoToFollow" :key="index">
           <div class="flex justify-between w-full items-center">
             <!-- img -->
             <div class="flex items-center">
@@ -109,8 +113,8 @@
             <!-- icon -->
             <i class="fa-solid fa-ellipsis"></i>
           </div>
-          <p class="font-semibold text-sm">{{ item.name }}</p>
-          <p class="text-sm">{{item.tweet}}</p>
+          <p class="font-semibold text-sm">{{ $store.state.userProfile.Username }}</p>
+          <p class="text-sm">{{item.Fullname}} just joined twitter</p>
         </div>
       </div>
     </div>
@@ -126,123 +130,7 @@
 import { ref } from "vue";
 
 const tweets = ref([
-  {
-    name: "daniel Daniel",
-    tweet:
-      "Lil🕸️Adonise. I wonder why programmers in movies don't encounter any bugs and errors.All they need is 2minutes and they're ins",
-    img: "",
-    nickname: "Dans",
-    time: "02 sept 2022",
-    reply: false,
-  },
-  {
-    name: "daniel Daniel",
-    tweet:
-      "Lil🕸️Adonise. I wonder why programmers in movies don't encounter any bugs and errors.All they need is 2minutes and they're in",
-    img: "",
-    nickname: "Dans",
-    time: "02 sept 2022",
-    reply: true,
-  },
-  {
-    name: "daniel Daniel",
-    tweet:
-      "Lil🕸️Adonise. I wonder why programmers in movies don't encounter any bugs and errors.All they need is 2minutes and they're in",
-    img: "",
-    nickname: "Dans",
-    time: "02 sept 2022",
-    reply: true,
-  },
-  {
-    name: "daniel Daniel",
-    tweet:
-      "Lil🕸️Adonise. I wonder why programmers in movies don't encounter any bugs and errors.All they need is 2minutes and they're in",
-    img: "",
-    nickname: "Dans",
-    time: "02 sept 2022",
-    reply: true,
-  },
-  {
-    name: "daniel Daniel",
-    tweet:
-      "Lil🕸️Adonise. I wonder why programmers in movies don't encounter any bugs and errors.All they need is 2minutes and they're in",
-    img: "",
-    nickname: "Dans",
-    time: "02 sept 2022",
-    reply: false,
-  },
-  {
-    name: "daniel Daniel",
-    tweet:
-      "Lil🕸️Adonise. I wonder why programmers in movies don't encounter any bugs and errors.All they need is 2minutes and they're in",
-    img: "",
-    nickname: "Dans",
-    time: "02 sept 2022",
-    reply: false,
-  },
-  {
-    name: "daniel Daniel",
-    tweet:
-      "Lil🕸️Adonise. I wonder why programmers in movies don't encounter any bugs and errors.All they need is 2minutes and they're in",
-    img: "",
-    nickname: "Dans",
-    time: "02 sept 2022",
-    reply: true,
-  },
-  {
-    name: "daniel Daniel",
-    tweet:
-      "Lil🕸️Adonise. I wonder why programmers in movies don't encounter any bugs and errors.All they need is 2minutes and they're in",
-    img: "",
-    nickname: "Dans",
-    time: "02 sept 2022",
-    reply: true,
-  },
-  {
-    name: "daniel Daniel",
-    tweet:
-      "Lil🕸️Adonise. I wonder why programmers in movies don't encounter any bugs and errors.All they need is 2minutes and they're in",
-    img: "",
-    nickname: "Dans",
-    time: "02 sept 2022",
-    reply: true,
-  },
-  {
-    name: "daniel Daniel",
-    tweet:
-      "Lil🕸️Adonise. I wonder why programmers in movies don't encounter any bugs and errors.All they need is 2minutes and they're in",
-    img: "",
-    nickname: "Dans",
-    time: "02 sept 2022",
-    reply: true,
-  },
-  {
-    name: "daniel Daniel",
-    tweet:
-      "Lil🕸️Adonise. I wonder why programmers in movies don't encounter any bugs and errors.All they need is 2minutes and they're in",
-    img: "",
-    nickname: "Dans",
-    time: "02 sept 2022",
-    reply: true,
-  },
-  {
-    name: "daniel Daniel",
-    tweet:
-      "Lil🕸️Adonise. I wonder why programmers in movies don't encounter any bugs and errors.All they need is 2minutes and they're in",
-    img: "",
-    nickname: "Dans",
-    time: "02 sept 2022",
-    reply: true,
-  },
-  {
-    name: "daniel Daniel",
-    tweet:
-      "Lil🕸️Adonise. I wonder why programmers in movies don't encounter any bugs and errors.All they need is 2minutes and they're in",
-    img: "",
-    nickname: "Dans",
-    time: "02 sept 2022",
-    reply: true,
-  },
+
   {
     name: "daniel Daniel",
     tweet:
