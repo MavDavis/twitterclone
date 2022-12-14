@@ -2,7 +2,7 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   generate: {
-    fallback: false
+    fallback: true
   },
   head: {
     title: 'twitter',
