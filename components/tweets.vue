@@ -69,8 +69,8 @@
                 </p>
                 <i class="fa-solid fa-ellipsis"></i>
               </div>
-              <div class="xs:h-96 h-36 rounded-lg my-2 rborder w-full">
-                <img v-if="item.img.length" class="w-full h-full relative object-fill" :src="item.img" alt="" />
+              <div class="xs:h-fit  h-36 rounded-lg my-2  w-full">
+                <img v-if="item.img.length" class="rounded-lg style-tweet-img relative object-fill" :src="item.img" alt="" />
               </div>
               <p class="text-sm">{{ item.tweets }}</p>
               <div class="flex w-5/6 justify-between pt-2">
@@ -153,5 +153,8 @@ svg, i {
     color: rgb(29 155 240);
   }
 }
-
+.style-tweet-img{
+  max-width:100%;
+  max-height:100%;
+}
 </style>

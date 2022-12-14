@@ -87,7 +87,7 @@ export default {
         { icon: "fal  fa-house", name: "Home", params: "index" },
         { icon: "fal fa-search", name: "Explore" },
         { icon: "fal fa-bell", name: "Notification" },
-        { icon: "fal fa-envelope", name: "Messages", params: "chat" },
+        { icon: "fal fa-envelope", name: "Messages" },
       ],
     };
   },

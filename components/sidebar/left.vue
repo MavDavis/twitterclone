@@ -69,7 +69,7 @@ export default {
         { icon: "fal fa-house", iconStart:'', name: "Home", params: "index" },
         { icon: " fa-hashtag", iconStart:'fal', name: "Explore", loggedIn: true },
         { icon: " fa-bell", iconStart:'fal', name: "Notification" },
-        { icon: " fa-envelope", iconStart:'fal', name: "Messages", params: "chat" },
+        { icon: " fa-envelope", iconStart:'fal', name: "Messages", },
         { icon: " fa-bookmark", iconStart:'fal', name: "Bookmark" },
         { icon: " fa-list", iconStart:'fal', name: "List" },
         { icon: " fa-user", iconStart:'fal', name: "Profile" },
