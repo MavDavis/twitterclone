@@ -9,23 +9,20 @@
     >
       <div class="flex w-full items-center">
         <div class="w-5/6 mr-2">
-          <searchbar placeholder="search direct message" class="p-4" />
+          <searchbar
+            placeholder="click envelope for new message"
+            class="p-4"
+            @click="searchUser()"
+            @keypress="searchUser()"
+          />
         </div>
         <div
-          class="w-1/12 p-2 rounded-full hover:bg-dim-50 cursor-pointer"
+          class="w-1/12 p-2 px-4 h-full rounded-full hover:bg-dim-50 cursor-pointer flex item-center justify-center"
           @click="searchUser"
         >
-          <svg
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            class="r-18jsvk2 r-4qtqp9 r-yyyyoo r-z80fyv r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-19wmn03"
-          >
-            <g>
-              <path
-                d="M1.998 5.5c0-1.381 1.119-2.5 2.5-2.5h15c1.381 0 2.5 1.119 2.5 2.5V12h-2v-1.537l-8 3.635-8-3.635V18.5c0 .276.224.5.5.5H13v2H4.498c-1.381 0-2.5-1.119-2.5-2.5v-13zm2 2.766l8 3.635 8-3.635V5.5c0-.276-.224-.5-.5-.5h-15c-.276 0-.5.224-.5.5v2.766zM19 18v-3h2v3h3v2h-3v3h-2v-3h-3v-2h3z"
-              ></path>
-            </g>
-          </svg>
+          <i
+            class="far fa-envelope text-dim-900 hover:text-dim-500 text-3xl"
+          ></i>
         </div>
       </div>
       <div class="w-full" v-if="$store.state.userProfile.chats.length > 0">
@@ -56,7 +53,7 @@
                 }}<span v-if="msg.Username.length > 8">...</span>
               </p>
               <p class="text-sm" v-if="msg.message.length">
-                {{ date(msg.message[msg.message.length - 1].time)}}
+                {{ date(msg.message[msg.message.length - 1].time) }}
               </p>
             </div>
             <p class="text-sm" v-if="msg.message.length">
@@ -187,9 +184,8 @@ export default {
     }
     this.chat = this.$store.state.userProfile.chats;
   },
-  created(){
+  created() {
     this.chat = this.$store.state.userProfile.chats;
-
   },
   data() {
     return {
@@ -204,18 +200,22 @@ export default {
     };
   },
   methods: {
-    date(item){
-     if(item.seconds){
-       let time =  item.seconds * 1000;
-        return new Date(time).toLocaleDateString('en-us', { month:"short", day:"numeric", year:"numeric"});
-    }else{
-      return item
-    }
-  },
+    date(item) {
+      if (item.seconds) {
+        let time = item.seconds * 1000;
+        return new Date(time).toLocaleDateString("en-us", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+      } else {
+        return item;
+      }
+    },
     addchat() {
       onSnapshot(doc(db, "User", this.$store.state.userProfile.id), (doc) => {
-        this.$store.commit('updateUser', doc.data());
-      })
+        this.$store.commit("updateUser", doc.data());
+      });
       // this.showChat(this.$store.state.newChatId);
       this.shoeChatSearchModal = false;
     },
@@ -259,11 +259,15 @@ export default {
           otherId: this.user.userId,
           userId: this.$store.state.userProfile.id,
           message: this.newMessage,
-          time: new Date().toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) 
-
-        }
+          time: new Date().toLocaleDateString("en-us", {
+            weekday: "long",
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          }),
+        };
         this.messages.push(msgg);
-        this.$store.commit('sendMessage', msgg)
+        this.$store.commit("sendMessage", msgg);
       }
       this.newMessage = "";
     },
@@ -281,7 +285,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 .chat-para {
   max-width: 75%;
   width: fit-content;
@@ -292,5 +296,25 @@ export default {
 } */
 .body {
   max-width: 100vw;
+}
+svg,
+i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  --tw-text-opacity: 1;
+  font-size: 1.125rem /* 18px */;
+  line-height: 1.75rem;
+  height: 32px;
+  width: 32px;
+  margin-right: 8px;
+  padding: 4px;
+  border-radius: 50%;
+  &:hover {
+    background: rgb(179 233 225 / var(--tw-text-opacity));
+    cursor: pointer;
+    fill: rgb(29 155 240);
+    color: rgb(29 155 240);
+  }
 }
 </style>
