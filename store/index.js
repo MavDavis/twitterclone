@@ -382,7 +382,7 @@ export const mutations = {
                   time: "02-sept,2023",
                 },
                 {
-                  userId: userId,
+                  userId: user.uid,
                   message: "Click on the envelope icon",
                   time: "02-sept,2023",
                 },
@@ -411,8 +411,7 @@ export const mutations = {
       .catch((error) => {
         const errorCode = error.code;
         console.log(error.message);
-        const email = error.customData.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
+        // const credential = GoogleAuthProvider.credentialFromError(error);
       });
   },
   logout(state) {
