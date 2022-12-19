@@ -8,13 +8,8 @@
       v-if="showchatUsers"
     >
       <div class="flex w-full items-center">
-        <div class="w-5/6 mr-2">
-          <searchbar
-            placeholder="click envelope for new message"
-            class="p-4"
-            @click="searchUser()"
-            @keypress="searchUser()"
-          />
+        <div class="w-5/6 mr-2" @click="searchUser()">
+          <searchbar placeholder="click envelope for new message" class="p-4" />
         </div>
         <div
           class="w-1/12 p-2 px-4 h-full rounded-full hover:bg-dim-50 cursor-pointer flex item-center justify-center"
@@ -224,6 +219,7 @@ export default {
     },
 
     searchUser() {
+      console.log("gg");
       this.shoeChatSearchModal = true;
     },
 
