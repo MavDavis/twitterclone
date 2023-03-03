@@ -24,11 +24,11 @@
                 relative
               "
             >
-              <div class="w-3/4          p-4">
+              <div class="w-3/4  p-4">
                 <p>{{ postTrend.img.title }}</p>
                 <p>{{ postTrend.img.name }}</p>
               </div>
-              <div class="w-1/4 relative">
+              <div class="w-1/4 relative h-full">
                 <img
                   class="w-full relative h-full"
                   src="../assets/jean-woloszczyk-CcPE98IQJGo-unsplash.jpg"
