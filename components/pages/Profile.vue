@@ -48,7 +48,7 @@
         </div>
         <div class="flex mt-2 px-4">
           <p class="mr-2 text-sm">{{ User.followers.length }} followers</p>
-          <p class="text-sm">{{ User.following.length }} following</p>
+          <p class="text-sm">{{$store.state.userProfile.following.length}} following</p>
         </div>
         <div class="w-full flex justify-between mt-2 px-4">
           <p @click="count()" class="hover:bg-slate-200 p-2 cursor-pointer">
