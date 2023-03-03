@@ -28,9 +28,9 @@
                 <p>{{ postTrend.img.title }}</p>
                 <p>{{ postTrend.img.name }}</p>
               </div>
-              <div class="w-1/4 relative h-full">
+              <div class="w-1/4 relative h-full overflow-hidden">
                 <img
-                  class="w-full relative min-h-full"
+                  class="w-full relative h-36"
                   src="../assets/jean-woloszczyk-CcPE98IQJGo-unsplash.jpg"
                   alt="img"
                 />
