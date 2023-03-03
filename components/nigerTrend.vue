@@ -31,7 +31,7 @@
               <div class="w-1/4 relative">
                 <img
                   class="w-full relative h-full"
-                  :src="postTrend.img.src"
+                  src="../assets/jean-woloszczyk-CcPE98IQJGo-unsplash.jpg"
                   alt="img"
                 />
               </div>
