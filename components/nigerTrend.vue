@@ -19,7 +19,7 @@
                 flex
                 items-center
                 rounded-lg
-            h-28
+            h-24
                 w-full
                 relative
               "
