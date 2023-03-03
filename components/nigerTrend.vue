@@ -30,7 +30,7 @@
               </div>
               <div class="w-1/4 relative h-full">
                 <img
-                  class="w-full relative h-full"
+                  class="w-full relative min-h-full"
                   src="../assets/jean-woloszczyk-CcPE98IQJGo-unsplash.jpg"
                   alt="img"
                 />
