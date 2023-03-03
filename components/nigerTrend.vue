@@ -19,12 +19,12 @@
                 flex
                 items-center
                 rounded-lg
-                p-4
+       
                 w-full
                 relative
               "
             >
-              <div class="w-3/4">
+              <div class="w-3/4          p-4">
                 <p>{{ postTrend.img.title }}</p>
                 <p>{{ postTrend.img.name }}</p>
               </div>
